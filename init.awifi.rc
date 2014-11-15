@@ -1,0 +1,1017 @@
+# Copyright (c) 2009-2013, The Linux Foundation. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above copyright
+#       notice, this list of conditions and the following disclaimer in the
+#       documentation and/or other materials provided with the distribution.
+#     * Neither the name of Code Aurora nor
+#       the names of its contributors may be used to endorse or promote
+#       products derived from this software without specific prior written
+#       permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NON-INFRINGEMENT ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+# OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+
+import init.awifi.usb.rc
+
+on post-fs-data
+
+    #CAPP_FONTS
+    mkdir /data/font 775 system system
+    chmod 775 /data/font
+    mkdir /data/font/config 775 system system
+    chmod 775 /data/font/config
+    mkdir /data/font/download 775 system system
+    chmod 775 /data/font/download
+
+    #create directory for lgdrm
+    mkdir /data/lgdrm 0770 lgdrm lgdrm_acc
+
+    #CAPP_BLUEERROR_HANDLER: temp version, it will be removed
+    chown root system /data/dontpanic
+    chmod 0775 /data/dontpanic
+
+    chown system system /dev/wcnss_wlan
+    write /sys/module/wcnss_ssr_8960/parameters/enable_riva_ssr 1
+
+    # Workaround for conn_init not copying the updated firmware
+    rm /data/misc/wifi/WCNSS_qcom_cfg.ini
+    rm /data/misc/wifi/WCNSS_qcom_wlan_nv.bin
+
+    #Create directory used by sensor subsystem(dsps)
+    mkdir /data/system/sensors
+    chmod 665 /data/system/sensors
+    write /data/system/sensors/settings 1
+    restorecon /data/system/sensors/settings
+    chmod 660 /data/system/sensors/settings
+    mkdir /data/misc/sensors
+    chmod 775 /data/misc/sensors
+
+    mkdir /persist/sensors
+    chmod 775 /persist/sensors
+
+    setprop ro.dsps.ready "true"
+
+on early-init
+    mkdir /firmware 0771 system system
+    symlink /data/tombstones /tombstones
+
+on early-fs
+    mkdir /persist 0771 system system
+    mkdir /persist-lg 0771 system system
+    mkdir /mpt 0775 system system
+    mkdir /factory 0775 system system
+    mkdir /sns 0775 system system
+    mount_all fstab.awifi
+
+    wait /dev/block/mmcblk0p1
+    mount vfat /dev/block/mmcblk0p1 /firmware ro umask=002 shortname=lower
+    mkdir /sns/cal 0771 system system
+
+on boot
+    write /sys/devices/i2c-3/3-0024/cyttsp_update_fw 1
+    write /sys/devices/i2c-3/3-005b/update_fw 1
+
+on post-fs-data
+   mkdir /data/tombstones 0771 system system
+   mkdir /tombstones/modem 0771 system system
+   mkdir /tombstones/lpass 0771 system system
+   mkdir /tombstones/wcnss 0771 system system
+   mkdir /tombstones/dsps 0771 system system
+   mkdir /tombstones/mdm 0771 system system
+   mkdir /tombstones/mdm2 0771 system system
+
+#start camera server as daemon
+service qcamerasvr /system/bin/mm-qcamera-daemon
+        class main
+        user camera
+        group camera system inet input graphics net_bt_stack
+
+#start GNSS/Sensor interface daemon
+service gsiff_daemon /system/bin/gsiff_daemon
+    class late_start
+    user system
+    group gps qcom_oncrpc net_raw
+
+service thermald /system/bin/thermald
+   class main
+   user root
+   group root
+
+service mpdecision /system/bin/mpdecision --no_sleep --avg_comp
+   class late_start
+   user root
+
+service rf4ce /system/bin/rf4ce
+   class main
+   user root
+   group root
+
+# sungwook.park@lge.com 2013.04.23 change qcks, ks, efsks into system process
+service kickstart /system/bin/qcks -i /firmware/image/
+    user system
+    group system
+    oneshot
+    disabled
+
+service mdm_helper /system/bin/mdm_helper
+    class main
+    onrestart setprop ro.service.mdm_helper_restarted "true"
+    disabled
+
+#service qrngd /system/bin/qrngd -f
+#   class main
+#   user root
+#   group root
+
+service qseecomd /system/bin/qseecomd
+   class late_start
+   user system
+   group system
+
+service usf_tester /system/bin/usf_tester
+    user system
+    group system inet
+    disabled
+
+service usf_epos /system/bin/usf_epos
+    user system
+    group system inet
+    disabled
+
+service usf_gesture /system/bin/usf_gesture
+    user system
+    group system inet
+    disabled
+
+service usf_p2p /system/bin/usf_p2p
+    user system
+    group system inet
+    disabled
+
+service usf_hovering /system/bin/usf_hovering
+    user system
+    group system inet
+    disabled
+
+service usf-post-boot /system/bin/sh /system/etc/usf_post_boot.sh
+    class late_start
+    user root
+    disabled
+    oneshot
+
+on property:init.svc.bootanim=stopped
+    start usf-post-boot
+
+service time_daemon /system/bin/time_daemon
+   class late_start
+   user root
+   group root
+
+on init
+
+# yeunbok.ryu keyguard file for ghost finger
+   chown system system /sys/devices/virtual/input/lge_touch/keyguard
+   chmod 664 /sys/devices/virtual/input/lge_touch/keyguard
+
+# donguk.ki incoming_call file for ghost finger
+   chown system system /sys/devices/virtual/input/lge_touch/incoming_call
+
+# donguk.ki f54 file for synaptics f54 function
+   chown system system /sys/devices/virtual/input/lge_touch/f54
+
+# eco mode
+   chown system system /sys/devices/platform/lge_kernel_driver/run_cpu
+   chown system system /sys/devices/platform/lge_kernel_driver/eco_cpu
+
+on post-fs-data
+# LGE_CHANGE_S Apply the MLT App [DGMS MC-C05692-3]
+   chown system system /mpt
+   chmod 0775 /mpt
+# LGE_CHANGE_E Apply the MLT App [DGMS MC-C05692-3]
+
+# LGE_CHANGE_S For DRM
+   chown system system /persist-lg
+   chmod 0771 /persist-lg
+
+   #DivX
+   mkdir /persist-lg/multimedia 0770 media divxdrm
+   chown media divxdrm /persist-lg/multimedia
+   chmod 0770 /persist-lg/multimedia
+# LGE_CHANGE_E For DRM
+
+# LGE_CHANGE_S For DivxDRM, Nextreaming
+   mkdir /persist-lg/multimedia/nx 0770 media divxdrm
+   chown media divxdrm /persist-lg/multimedia/nx
+   chmod 0770 /persist-lg/multimedia/nx
+
+   mkdir /persist-lg/multimedia/uma 0770 media divxdrm
+   chown media divxdrm /persist-lg/multimedia/uma
+   chmod 0770 /persist-lg/multimedia/uma
+
+   mkdir /persist-lg/multimedia/scnt 0770 media divxdrm
+   chown media divxdrm /persist-lg/multimedia/scnt
+   chmod 0770 /persist-lg/multimedia/scnt
+
+   mkdir /persist-lg/multimedia/scnt/sdadf 0770 media divxdrm
+   chown media divxdrm /persist-lg/multimedia/scnt/sdadf
+   chmod 0770 /persist-lg/multimedia/scnt/sdadf
+# LGE_CHANGE_E For DivxDRM, Nextreaming
+
+
+## start qcom-post-boot
+   write /sys/module/rpm_resources/enable_low_power/L2_cache 1
+   write /sys/module/rpm_resources/enable_low_power/pxo 1
+   write /sys/module/rpm_resources/enable_low_power/vdd_dig 1
+   write /sys/module/rpm_resources/enable_low_power/vdd_mem 1
+   write /sys/module/pm_8x60/modes/cpu0/retention/idle_enabled 1
+   write /sys/module/pm_8x60/modes/cpu1/retention/idle_enabled 1
+   write /sys/module/pm_8x60/modes/cpu2/retention/idle_enabled 1
+   write /sys/module/pm_8x60/modes/cpu3/retention/idle_enabled 1
+   write /sys/module/pm_8x60/modes/cpu0/power_collapse/suspend_enabled 1
+   write /sys/module/pm_8x60/modes/cpu1/power_collapse/suspend_enabled 1
+   write /sys/module/pm_8x60/modes/cpu2/power_collapse/suspend_enabled 1
+   write /sys/module/pm_8x60/modes/cpu3/power_collapse/suspend_enabled 1
+   write /sys/module/pm_8x60/modes/cpu0/standalone_power_collapse/suspend_enabled 1
+   write /sys/module/pm_8x60/modes/cpu1/standalone_power_collapse/suspend_enabled 1
+   write /sys/module/pm_8x60/modes/cpu2/standalone_power_collapse/suspend_enabled 1
+   write /sys/module/pm_8x60/modes/cpu3/standalone_power_collapse/suspend_enabled 1
+   write /sys/module/pm_8x60/modes/cpu0/standalone_power_collapse/idle_enabled 1
+   write /sys/module/pm_8x60/modes/cpu1/standalone_power_collapse/idle_enabled 1
+   write /sys/module/pm_8x60/modes/cpu2/standalone_power_collapse/idle_enabled 1
+   write /sys/module/pm_8x60/modes/cpu3/standalone_power_collapse/idle_enabled 1
+   write /sys/module/pm_8x60/modes/cpu0/power_collapse/idle_enabled 1
+   write /sys/module/msm_thermal/core_control/enabled 0
+   write /sys/devices/system/cpu/cpu1/online 1
+   write /sys/devices/system/cpu/cpu2/online 1
+   write /sys/devices/system/cpu/cpu3/online 1
+   write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "ondemand"
+   write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor "ondemand"
+   write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor "ondemand"
+   write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor "ondemand"
+   write /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate 50000
+   write /sys/devices/system/cpu/cpufreq/ondemand/up_threshold 90
+   write /sys/devices/system/cpu/cpufreq/ondemand/io_is_busy 1
+   write /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor 4
+   write /sys/devices/system/cpu/cpufreq/ondemand/down_differential 10
+   write /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_multi_core 70
+   write /sys/devices/system/cpu/cpufreq/ondemand/down_differential_multi_core 3
+   write /sys/devices/system/cpu/cpufreq/ondemand/optimal_freq 918000
+   write /sys/devices/system/cpu/cpufreq/ondemand/sync_freq 1026000
+   write /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_any_cpu_load 80
+   chown system system /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
+   chown system system /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
+   chown system system /sys/devices/system/cpu/cpufreq/ondemand/io_is_busy
+   write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 384000
+   write /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq 384000
+   write /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq 384000
+   write /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq 384000
+   chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+   chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+   chown system system /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
+   chown system system /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+   chown system system /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
+   chown system system /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
+   chown system system /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq
+   chown system system /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
+   write /sys/devices/system/cpu/cpufreq/ondemand/middle_grid_step 7      
+   write /sys/devices/system/cpu/cpufreq/ondemand/high_grid_step 14     
+   write /sys/devices/system/cpu/cpufreq/ondemand/middle_grid_load 53     
+   write /sys/devices/system/cpu/cpufreq/ondemand/high_grid_load 65     
+   write /sys/devices/system/cpu/cpufreq/ondemand/optimal_max_freq 1026000
+   write /sys/module/msm_thermal/core_control/enabled 1
+   chown root system /sys/devices/system/cpu/mfreq
+   chmod 0220 /sys/devices/system/cpu/mfreq
+   chown root system /sys/devices/system/cpu/cpu1/online
+   chown root system /sys/devices/system/cpu/cpu2/online
+   chown root system /sys/devices/system/cpu/cpu3/online
+   chmod 0664 /sys/devices/system/cpu/cpu1/online
+   chmod 0664 /sys/devices/system/cpu/cpu2/online
+   chmod 0664 /sys/devices/system/cpu/cpu3/online
+   # set DCVS parameters for CPU
+   write /sys/module/msm_dcvs/cores/cpu0/slack_time_max_us 40000
+   write /sys/module/msm_dcvs/cores/cpu0/slack_time_min_us 40000
+   write /sys/module/msm_dcvs/cores/cpu0/em_win_size_min_us 100000
+   write /sys/module/msm_dcvs/cores/cpu0/em_win_size_max_us 500000
+   write /sys/module/msm_dcvs/cores/cpu0/slack_mode_dynamic 0
+   write /sys/module/msm_dcvs/cores/cpu0/disable_pc_threshold 1000000
+   write /sys/module/msm_dcvs/cores/cpu1/slack_time_max_us 25000
+   write /sys/module/msm_dcvs/cores/cpu1/slack_time_min_us 25000
+   write /sys/module/msm_dcvs/cores/cpu1/em_win_size_min_us 100000
+   write /sys/module/msm_dcvs/cores/cpu1/em_win_size_max_us 500000
+   write /sys/module/msm_dcvs/cores/cpu1/slack_mode_dynamic 0
+   write /sys/module/msm_dcvs/cores/cpu1/disable_pc_threshold 1000000
+   write /sys/module/msm_dcvs/cores/cpu2/slack_time_max_us 25000
+   write /sys/module/msm_dcvs/cores/cpu2/slack_time_min_us 25000
+   write /sys/module/msm_dcvs/cores/cpu2/em_win_size_min_us 100000
+   write /sys/module/msm_dcvs/cores/cpu2/em_win_size_max_us 500000
+   write /sys/module/msm_dcvs/cores/cpu2/slack_mode_dynamic 0
+   write /sys/module/msm_dcvs/cores/cpu2/disable_pc_threshold 1000000
+   write /sys/module/msm_dcvs/cores/cpu3/slack_time_max_us 25000
+   write /sys/module/msm_dcvs/cores/cpu3/slack_time_min_us 25000
+   write /sys/module/msm_dcvs/cores/cpu3/em_win_size_min_us 100000
+   write /sys/module/msm_dcvs/cores/cpu3/em_win_size_max_us 500000
+   write /sys/module/msm_dcvs/cores/cpu3/slack_mode_dynamic 0
+   write /sys/module/msm_dcvs/cores/cpu3/disable_pc_threshold 1000000
+   # set DCVS parameters for GPU
+   write /sys/module/msm_dcvs/cores/gpu0/slack_time_max_us 20000
+   write /sys/module/msm_dcvs/cores/gpu0/slack_time_min_us 20000
+   write /sys/module/msm_dcvs/cores/gpu0/slack_mode_dynamic 0
+   # set msm_mpdecision parameters
+   write /sys/module/msm_mpdecision/slack_time_max_us 45000
+   write /sys/module/msm_mpdecision/slack_time_min_us 15000
+   write /sys/module/msm_mpdecision/em_win_size_min_us 100000
+   write /sys/module/msm_mpdecision/em_win_size_max_us 1000000
+   write /sys/module/msm_mpdecision/online_util_pct_min 3
+   write /sys/module/msm_mpdecision/online_util_pct_max 25
+   write /sys/module/msm_mpdecision/em_max_util_pct 97
+   write /sys/module/msm_mpdecision/rq_avg_poll_ms 2
+   write /sys/module/msm_mpdecision/mp_em_rounding_point_min 10
+   write /sys/module/msm_mpdecision/mp_em_rounding_point_max 85
+   write /sys/module/msm_mpdecision/iowait_threshold_pct 50
+   #set permissions for the nodes needed by display on/off hook
+   chown system system /sys/module/msm_dcvs/cores/cpu0/slack_time_max_us
+   chown system system /sys/module/msm_dcvs/cores/cpu0/slack_time_min_us
+   chown system system /sys/module/msm_mpdecision/slack_time_max_us
+   chown system system /sys/module/msm_mpdecision/slack_time_min_us
+   chmod 0664 /sys/module/msm_dcvs/cores/cpu0/slack_time_max_us
+   chmod 0664 /sys/module/msm_dcvs/cores/cpu0/slack_time_min_us
+   chmod 0664 /sys/module/msm_mpdecision/slack_time_max_us
+   chmod 0664 /sys/module/msm_mpdecision/slack_time_min_us
+
+   write /sys/devices/platform/msm_sdcc.3/idle_timeout 10
+## end of qcom-post-boot
+
+on property:ro.build.type=userdebug
+   mount debugfs /sys/kernel/debug /sys/kernel/debug
+
+# LGE_CHANGE_S, Add atd service
+service atd /system/bin/atd /dev/ttyGS0
+   socket atd stream 0660 system inet
+   disabled
+on property:ro.baseband="mdm"
+   start atd
+# kyle00.choi, 20130402, To feature out the modem: mdm --> apq [START]
+on property:ro.baseband="apq"
+   start atd
+
+on property:ro.build.type=userdebug
+   chmod 0444 /proc/cmdline
+
+on init
+    chmod 0701 /mnt/media_rw
+    mkdir /mnt/media_rw/sdcard1 0775 system system
+    mkdir /mnt/media_rw/usb 0775 system system
+    # Set permissions for persist partition
+    mkdir /persist 0771 system system
+    # See storage config details at http://source.android.com/tech/storage/
+    mkdir /mnt/shell/emulated 0700 shell shell
+    mkdir /storage 0550 system sdcard_r
+    mkdir /storage/emulated 0555 root root
+    mkdir /storage/emulated/legacy 0555 root root
+    mkdir /storage/sdcard1 0000 system system
+    mkdir /storage/usb 0000 system system
+
+
+    export EXTERNAL_STORAGE /storage/emulated/legacy
+    export EMULATED_STORAGE_SOURCE /mnt/shell/emulated
+    export EMULATED_STORAGE_TARGET /storage/emulated
+    export SECONDARY_STORAGE /storage/sdcard1:/storage/usb
+
+    # Support legacy paths
+	#2013.03.13 add symlink for Docomo PlayReady DRM[START] 
+	symlink /storage/emulated/legacy /storage/emulated/0
+	#2013.03.13 add symlink for Docomo PlayReady DRM[END] 
+    symlink /storage/emulated/legacy /sdcard
+    symlink /storage/emulated/legacy /mnt/sdcard
+    symlink /storage/emulated/legacy /storage/sdcard0
+    symlink /storage/sdcard1 /storage/external_SD
+
+on early-boot
+    # set RLIMIT_MEMLOCK to 64MB
+    setrlimit 8 67108864 67108864
+
+    # disable lmk_fast_run
+    write /sys/module/lowmemorykiller/parameters/lmk_fast_run 0
+
+on boot
+    chown system system /sys/devices/platform/lg_diag_cmd/diag_enable
+    chmod 0660 /sys/devices/platform/lg_diag_cmd/diag_enable
+
+#LGE_CHANGE_S 20130821 sw84.lee [AWIFI][Touch] enable knock_on feature
+    chown system system /sys/devices/i2c-3/3-004b/knock_on
+    chmod 660 /sys/devices/i2c-3/3-004b/knock_on
+#LGE_CHANGE_E 20130821 sw84.lee [AWIFI][Touch] enable knock_on feature
+#LGE_CHANGE_S 20130830 goensoo.kim [AWIFI][Touch] enable smart_cover feature
+    chown system system /sys/devices/i2c-3/3-004b/smart_cover
+    chmod 660 /sys/devices/i2c-3/3-004b/smart_cover
+#LGE_CHANGE_E 20130830 goensoo.kim [AWIFI][Touch] enable smart_cover feature
+
+# LG_BTUI, 20120215, Permission for Bluetooth - [S]
+    chown bluetooth bluetooth /sys/module/bluetooth_power/parameters/power
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
+    chown bluetooth bluetooth /proc/bluetooth/sleep/proto
+    chown bluetooth bluetooth /proc/bluetooth/sleep/btwake        
+    chown system system /sys/module/sco/parameters/disable_esco
+    chown bluetooth bluetooth /sys/module/hci_smd/parameters/hcismd_set
+    chmod 0660 /sys/module/bluetooth_power/parameters/power
+    chmod 0660 /sys/module/hci_smd/parameters/hcismd_set
+    chmod 0660 /sys/class/rfkill/rfkill0/state
+    chmod 0660 /proc/bluetooth/sleep/proto
+    chmod 0660 /proc/bluetooth/sleep/btwake 
+    chown bluetooth bluetooth /dev/ttyHS0
+    chmod 0660 /dev/ttyHS0
+    chown bluetooth bluetooth /sys/devices/platform/msm_serial_hs.0/clock
+    chmod 0660 /sys/devices/platform/msm_serial_hs.0/clock
+	chmod 0600 /dev/btlock
+	chown bluetooth bluetooth /dev/btlock    
+# LGE_UPDATE_S 20130511 keunhui.park setup for IRRC
+	chown system audio /dev/msm_IRRC_pcm_dec
+	chmod 0660 /dev/msm_IRRC_pcm_dec
+# LGE_UPDATE_E 20130511 keunhui.park setup for IRRC
+
+
+#    chmod 0660 /dev/ttyHS2
+#    chown bluetooth bluetooth /dev/ttyHS2
+# LG_BTUI, 20120215, Permission for Bluetooth - [E]
+
+    #Create QMUX deamon socket area
+    mkdir /dev/socket/qmux_radio 0770 radio radio
+    chmod 2770 /dev/socket/qmux_radio
+    mkdir /dev/socket/qmux_audio 0770 media audio
+    chmod 2770 /dev/socket/qmux_audio
+    mkdir /dev/socket/qmux_bluetooth 0770 bluetooth bluetooth
+    chmod 2770 /dev/socket/qmux_bluetooth
+    mkdir /dev/socket/qmux_gps 0770 gps gps
+    chmod 2770 /dev/socket/qmux_gps
+
+    setprop wifi.interface wlan0
+    setprop ro.tether.denied true
+
+    setprop ro.telephony.call_ring.multiple false
+
+    #Set SUID bit for usbhub
+    chmod 4755 /system/bin/usbhub
+    chmod 755 /system/bin/usbhub_init
+
+    #Remove SUID bit for iproute2 ip tool
+    chmod 0755 /system/bin/ip
+
+#LGE_CHANGE_S 20130605 keunhui.park [AWIFI][Vibrator] enable vibrator volume
+	chown system system /sys/class/timed_output/vibrator/amp
+#LGE_CHANGE_E 20130605 keunhui.park [AWIFI][Vibrator] enable vibrator volume
+#LGE_CHANGE_S 20130621 keunhui.park [AWIFI][Audio] fix user of speaker power_on
+	chown system system /sys/devices/i2c-0/0-0058/power_on
+	chown system system /sys/devices/i2c-7/7-0058/power_on
+#LGE_CHANGE_E 20130621 keunhui.park [AWIFI][Audio] fix user of speaker power_on
+
+    chmod 0444 /sys/devices/platform/msm_hsusb/gadget/usb_state
+
+    # Change permissions for fps_level nodes
+    chown system graphics /sys/class/graphics/fb0/msm_fb_fps_level
+    chown system graphics /sys/class/graphics/fb1/msm_fb_fps_level
+    chown system graphics /sys/class/graphics/fb2/msm_fb_fps_level
+    chmod 644 /sys/class/graphics/fb0/msm_fb_fps_level
+    chmod 400 /sys/class/graphics/fb1/msm_fb_fps_level
+    chmod 400 /sys/class/graphics/fb2/msm_fb_fps_level
+
+    # Change owner and group for media server and surface flinger
+    chown system system /sys/devices/virtual/graphics/fb1/format_3d
+
+    #For bridgemgr daemon to inform the USB driver of the correct transport
+    chown radio radio /sys/class/android_usb/f_rmnet_smd_sdio/transport
+
+    #To allow interfaces to get v6 address when tethering is enabled
+    write /proc/sys/net/ipv6/conf/rmnet0/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet1/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet2/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet3/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet4/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet5/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet6/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet7/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio0/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio1/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio2/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio3/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio4/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio5/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio6/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_sdio7/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_usb0/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_usb1/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_usb2/accept_ra 2
+    write /proc/sys/net/ipv6/conf/rmnet_usb3/accept_ra 2
+
+    # To prevent out of order acknowledgements from making
+    # connection tracking to treat them as not belonging to
+    # the connection they belong to.
+    # Otherwise, a weird issue happens in which some long
+    # connections on high-throughput links get dropped when
+    # an ack packet comes out of order
+    write /proc/sys/net/netfilter/nf_conntrack_tcp_be_liberal 1
+
+#LGE_CHANGE_S, minjeon.kim@lge.com 2012-06-29 for performance
+# Define TCP buffer sizes for various networks
+#   ReadMin, ReadInitial, ReadMax, WriteMin, WriteInitial, WriteMax,
+    setprop net.tcp.buffersize.default 8096,87380,110208,4096,16384,110208
+    setprop net.tcp.buffersize.lte     8096,140625,3461120,4096,140625,3461120
+    setprop net.tcp.buffersize.umts    8096,140625,3461120,4096,140625,3461120
+    setprop net.tcp.buffersize.hspa    8096,140625,3461120,4096,140625,3461120
+    setprop net.tcp.buffersize.hsupa   8096,140625,3461120,4096,140625,3461120
+    setprop net.tcp.buffersize.hsdpa   8096,140625,3461120,4096,140625,3461120
+    setprop net.tcp.buffersize.hspap   8096,140625,3461120,4096,140625,3461120
+    setprop net.tcp.buffersize.edge    8096,87380,110208,4096,16384,35040
+    setprop net.tcp.buffersize.gprs    8096,87380,110208,4096,8760,11680
+# Assign TCP buffer thresholds to be ceiling value of technology maximums
+# Increased technology maximums should be reflected here.
+    write /proc/sys/net/core/rmem_max  3461120
+    write /proc/sys/net/core/wmem_max  3461120
+#LGE_CHANGE_E, minjeon.kim@lge.com 2012-06-29 for performance
+
+#LGE_CHANGE_S, 20130305, jihee.moon@lge.com, Set the status of backlight brightness when boot
+    setprop ro.lge.lcd_default_brightness 168
+    setprop ro.lge.lcd_auto_brightness_mode false
+#LGE_CHANGE_E, 20130305, jihee.moon@lge.com, Set the status of backlight brightness when boot
+
+# LGE_CHANGE_S, 20120203, chaeuk.lee@lge.com, permission for IrDA tty driver
+    chmod 664 /dev/ttyHSL3
+    chown system system /dev/ttyHSL3
+# LGE_CHANGE_E, 20120203, chaeuk.lee@lge.com
+
+# LGE_CHANGE_S, 20120402, chaeuk.lee@lge.com, permission for IrDA factory procfs
+    chown system system /proc/lge_irda_factory
+# LGE_CHANGE_E, 20120402, chaeuk.lee@lge.com
+
+# LGE_CHANGE_S, 20130108, seokjeong.hong@lge.com, AAT OTG Test
+    chown system system /sys/class/android_usb/android0/otg
+# LGE_CHANGE_E, 20130108, seokjeong.hong@lge.com, AAT OTG Test
+
+    # Remove write permissions to video related nodes
+    chmod 0664 /sys/devices/virtual/graphics/fb1/hpd
+    chmod 0664 /sys/devices/virtual/graphics/fb1/video_mode
+    chmod 0664 /sys/devices/virtual/graphics/fb1/format_3d
+
+    # Change owner and group for media server and surface flinger
+    chown system system /sys/devices/virtual/graphics/fb1/format_3d
+    chown system system /sys/devices/virtual/graphics/fb1/hpd
+
+on fs
+# LGE_CHANGED_S [2013-02-14][jungjoo.nahm@lge.com] for widevine drm and lgdrm(future-use)
+    chown system system /persist-lg
+    chmod 0771 /persist-lg
+
+    #LGDRM
+    mkdir /persist-lg/lgdrm 0770 lgdrm lgdrm_acc
+
+    #Widevine L1
+    mkdir /persist-lg/widevine 0770 system system
+# LGE_CHANGED_E [2013-02-14][jungjoo.nahm@lge.com] for widevine drm and lgdrm(future-use)
+
+# LGE_CHANGED_S [2013-02-05][hyeyoung1024.kim@lge.com] for playreadydrm secureclock
+# Create secure clock path
+    mkdir /persist-lg/secclk 0700 system system
+    chown system system /persist-lg/secclk
+    chmod 0700 /persist-lg/secclk  
+# LGE_CHANGED_E [2013-02-05][hyeyoung1024.kim@lge.com] for playreadydrm secureclock
+
+# msm specific files that need to be created on /data
+on post-fs-data
+    # we will remap this as /mnt/sdcard with the sdcard fuse tool
+    mkdir /data/media 0770 media_rw media_rw
+    chown media_rw media_rw /data/media
+
+# LG_BTUI, 20120215, Permission for Bluetooth - [S]
+#    mkdir /data/misc/bluetooth 0770 bluetooth bluetooth
+	mkdir /data/misc/bluetooth 0770 bluetooth bluetooth
+    # Feature chip vendor : brcm, qct
+    setprop bluetooth.chip.vendor qct
+    setprop persist.service.bt.support.map false
+# LG_BTUI, 20120215, Permission for Bluetooth - [E]	    
+
+    # Create the directories used by the Wireless subsystem
+    mkdir /data/misc/wifi 0771 wifi wifi
+    mkdir /data/misc/wifi/sockets 0770 wifi wifi
+    mkdir /data/misc/wifi/wpa_supplicant 0770 wifi wifi
+    mkdir /data/misc/dhcp 0770 dhcp dhcp
+    chown dhcp dhcp /data/misc/dhcp
+
+    # Create the directory used by CnE subsystem
+    mkdir /data/connectivity 0771 system system
+    chown system system /data/connectivity
+
+    # Create directory used by audio subsystem
+    mkdir /data/misc/audio 0770 audio audio
+
+    # Mounting of persist is moved to 'on emmc-fs' and 'on fs' sections
+    # We chown/chmod /persist again so because mount is run as root + defaults
+    chown system system /persist
+    chmod 0771 /persist
+    chmod 0664 /sys/devices/platform/msm_sdcc.1/polling
+    chmod 0664 /sys/devices/platform/msm_sdcc.2/polling
+    chmod 0664 /sys/devices/platform/msm_sdcc.3/polling
+    chmod 0664 /sys/devices/platform/msm_sdcc.4/polling
+
+    # Chown polling nodes as needed from UI running on system server
+    chown system system /sys/devices/platform/msm_sdcc.1/polling
+    chown system system /sys/devices/platform/msm_sdcc.2/polling
+    chown system system /sys/devices/platform/msm_sdcc.3/polling
+    chown system system /sys/devices/platform/msm_sdcc.4/polling
+
+    #Create the symlink to qcn wpa_supplicant folder for ar6000 wpa_supplicant
+    mkdir /data/system 0775 system system
+    #symlink /data/misc/wifi/wpa_supplicant /data/system/wpa_supplicant
+
+    #Create directory from IMS services
+    mkdir /data/shared 0755
+    chown system system /data/shared
+
+    #Create directory for FOTA
+    mkdir /data/fota 0771
+    chown system system /data/fota
+
+    #Create directory for hostapd
+    mkdir /data/hostapd 0770 system wifi
+
+    # Create /data/time folder for time-services
+    mkdir /data/time/ 0700 system system
+
+    mkdir /data/audio/ 0770 media audio
+
+# sungwook.park@lge.com 2013.04.23 change qcks, ks, efsks into system process
+    chown system /dev/block/platform/msm_sdcc.1/by-name
+
+    setprop vold.post_fs_data_done 1
+
+    setprop ro.ssbd.session /dev/block/platform/msm_sdcc.1/by-name/eksst
+    setprop ro.ssbd.offset 0
+
+# bonkang.koo@lge.com 2012.10.23 set default sdcard fs type
+    setprop vold.sdcard_fs_type none
+
+    chown root system /sys/devices/platform/kcal_ctrl.0/kcal
+    chown root system /sys/devices/platform/kcal_ctrl.0/kcal_ctrl
+    chmod 0664 /sys/class/timed_output/vibrator/amp
+    chmod 0664 /sys/devices/platform/kcal_ctrl.0/kcal
+    chmod 0664 /sys/devices/platform/kcal_ctrl.0/kcal_ctrl
+    restorecon /sys/class/timed_output/vibrator/amp
+    restorecon /sys/devices/platform/kcal_ctrl.0/kcal
+    restorecon /sys/devices/platform/kcal_ctrl.0/kcal_ctrl
+
+on property:init.svc.surfaceflinger=stopped
+    stop ppd
+
+on property:init.svc.wpa_supplicant=stopped
+    stop dhcpcd
+
+service qcom-c_core-sh /system/bin/sh /init.qcom.class_core.sh
+    class core
+    user root
+    oneshot
+
+service qcom-c_main-sh /system/bin/sh /init.qcom.class_main.sh
+    class main
+    user root
+    oneshot
+
+on property:vold.decrypt=trigger_restart_framework
+    start qcom-c_main-sh
+    start config_bluetooth
+    stop sensors
+    start sensors
+    start conn_init
+
+service cnd /system/bin/cnd
+    class late_start
+    socket cnd stream 660 root inet
+
+service irsc_util /system/bin/logwrapper /system/bin/irsc_util "/etc/sec_config"
+    class main
+    user root
+    oneshot
+
+service rmt_storage /system/bin/rmt_storage
+    class core
+    user root
+    disabled
+
+on property:ro.boot.emmc=true
+    start rmt_storage
+
+service config_bluetooth /system/bin/sh /system/etc/init.qcom.bt.sh "onboot"
+    class core
+    user root
+    oneshot
+
+service dbus /system/bin/dbus-daemon --system --nofork
+    class core
+    socket dbus stream 660 bluetooth bluetooth
+    user bluetooth
+    group bluetooth net_bt_admin
+    disabled
+
+on property:ro.qc.bluetooth.stack=bluez
+    start dbus
+
+service bluetoothd /system/bin/logwrapper /system/bin/bluetoothd -n
+    class main
+    socket bluetooth stream 660 bluetooth bluetooth
+    socket dbus_bluetooth stream 660 bluetooth bluetooth
+    # init.rc does not yet support applying capabilities, so run as root and
+    # let bluetoothd drop uid to bluetooth with the right linux capabilities
+    group bluetooth net_bt_admin misc net_bt_stack
+    disabled
+
+service hciattach /system/bin/sh /system/etc/init.qcom.bt.sh
+    class late_start
+    user bluetooth
+    group qcom_oncrpc bluetooth net_bt_admin  system
+    disabled
+    oneshot
+
+on property:bluetooth.hciattach=true
+    start hciattach
+
+on property:bluetooth.hciattach=false
+    setprop bluetooth.status off
+
+service hciattach_ath3k /system/bin/sh /system/etc/init.ath3k.bt.sh
+     class late_start
+     user bluetooth
+     group system bluetooth net_bt_admin misc
+     disabled
+     oneshot
+
+service bt-dun /system/bin/dun-server /dev/smd7 /dev/rfcomm0
+    class late_start
+    user bluetooth
+    group bluetooth net_bt_admin inet
+    disabled
+    oneshot
+
+service bt-sap /system/bin/sapd 15
+    user bluetooth
+    group bluetooth net_bt_admin
+    class late_start
+    disabled
+    oneshot
+
+service bridgemgrd /system/bin/bridgemgrd
+    class late_start
+    user radio
+    group radio qcom_diag
+    disabled
+
+service port-bridge /system/bin/port-bridge /dev/smd0 /dev/ttyGS0
+    class late_start
+    user system
+    group system inet
+    disabled
+
+service qmiproxy /system/bin/qmiproxy
+    class main
+    user radio
+    group radio qcom_diag
+    disabled
+
+# QMUX must be in multiple groups to support external process connections
+service qmuxd /system/bin/qmuxd
+    class main
+    user radio
+    group radio audio bluetooth gps qcom_diag
+    disabled
+
+service netmgrd /system/bin/netmgrd
+    class main
+    disabled
+
+service sensors /system/bin/sensors.qcom
+    class late_start
+    user root
+    group root
+    disabled
+
+on property:ro.dsps.ready=true
+    start sensors
+
+on property:ro.use_data_netmgrd=false
+    # netmgr not supported on specific target
+    stop netmgrd
+
+# Adjust socket buffer to enlarge TCP receive window for high bandwidth
+# but only if ro.data.large_tcp_window_size property is set.
+on property:ro.data.large_tcp_window_size=true
+    write /proc/sys/net/ipv4/tcp_adv_win_scale  1
+
+service btwlancoex /system/bin/sh /system/etc/init.qcom.coex.sh
+    class late_start
+    user bluetooth
+    group bluetooth net_bt_admin inet net_admin net_raw
+    disabled
+    oneshot
+
+service p2p_supplicant /system/bin/wpa_supplicant \
+    -ip2p0  -Dnl80211 -c/data/misc/wifi/p2p_supplicant.conf -N \
+    -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
+    -e/data/misc/wifi/entropy.bin -puse_p2p_group_interface=1use_multi_chan_concurrent=1 -g@android:wpa_wlan0 -O/data/misc/wifi/sockets
+    #   we will start as root and wpa_supplicant will switch to user wifi
+    #   after setting up the capabilities required for WEXT
+    #   user wifi
+    #   group wifi inet keystore
+    class main
+    socket wpa_wlan0 dgram 660 wifi wifi
+    disabled
+    oneshot
+
+service wpa_supplicant /system/bin/wpa_supplicant \
+    -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
+    -e/data/misc/wifi/entropy.bin -g@android:wpa_wlan0 -O/data/misc/wifi/sockets
+    #   we will start as root and wpa_supplicant will switch to user wifi
+    #   after setting up the capabilities required for WEXT
+    #   user wifi
+    #   group wifi inet keystore
+    class main
+    socket wpa_wlan0 dgram 660 wifi wifi
+    disabled
+    oneshot
+
+# if G option added, the gateway do not update in the specific status. from jaeshick.shin@lge.com
+service dhcpcd_wlan0 /system/bin/dhcpcd -ABKL
+    class late_start
+    disabled
+    oneshot
+
+# Original As below
+#service dhcpcd_wlan0 /system/bin/dhcpcd -ABKLG
+#    class late_start
+#    disabled
+#    oneshot
+
+service dhcpcd_p2p /system/bin/dhcpcd -ABKLG
+    class late_start
+    disabled
+    oneshot
+
+service iprenew_wlan0 /system/bin/dhcpcd -n
+    class late_start
+    disabled
+    oneshot
+
+service iprenew_p2p /system/bin/dhcpcd -n
+    class late_start
+    disabled
+    oneshot
+
+service dhcpcd_bt-pan /system/bin/dhcpcd -ABKL
+    class main
+    disabled
+    oneshot
+
+service iprenew_bt-pan /system/bin/dhcpcd -n
+    class main
+    disabled
+    oneshot
+
+service fm_dl /system/bin/sh /system/etc/init.qcom.fm.sh
+    class late_start
+    user root
+    group system qcom_oncrpc
+    disabled
+    oneshot
+
+on property:crypto.driver.load=1
+     insmod /system/lib/modules/qce.ko
+     insmod /system/lib/modules/qcedev.ko
+
+on property:crypto.driver.load=0
+     exec /system/bin/rmmod qcedev.ko
+     exec /system/bin/rmmod qce.ko
+
+service drmdiag /system/bin/drmdiagapp
+    class late_start
+     user root
+     disabled
+     oneshot
+
+on property:drmdiag.load=1
+    start drmdiag
+
+on property:drmdiag.load=0
+    stop drmdiag
+
+service qcom-sh /system/bin/sh /init.qcom.sh
+    class late_start
+    user root
+    oneshot
+
+service wifi-sdio-on /system/bin/sh /system/etc/init.qcom.sdio.sh
+    class late_start
+    group wifi inet
+    disabled
+    oneshot
+
+service wifi-crda /system/bin/sh /system/etc/init.crda.sh
+   class late_start
+   user root
+   disabled
+   oneshot
+
+service ppd /system/bin/mm-pp-daemon
+    class late_start
+    user system
+    socket pps stream 0660 system system graphics
+    group system graphics
+
+service hostapd /system/bin/hostapd -dddd /data/hostapd/hostapd.conf
+    class late_start
+    user root
+    group root
+    oneshot
+    disabled
+
+on property:ro.data.large_tcp_window_size=true
+    # Adjust socket buffer to enlarge TCP receive window for high bandwidth (e.g. DO-RevB)
+    write /proc/sys/net/ipv4/tcp_adv_win_scale  1
+
+service sdcard /system/bin/sdcard -u 1023 -g 1023 -l /data/media /mnt/shell/emulated
+    class main
+#    disabled
+
+on property:ro.fuse_sdcard=true
+    start sdcard
+
+# Binding fuse mount point to /storage/emulated/legacy
+on property:init.svc.sdcard=running
+    wait /mnt/shell/emulated/0
+    mount none /mnt/shell/emulated/0 /storage/emulated/legacy bind
+
+# This will make sure that sdcard service starts as late_start.
+on nonencrypted
+    setprop ro.fuse_sdcard ${persist.fuse_sdcard}
+
+on property:vold.decrypt=trigger_restart_framework
+    setprop ro.fuse_sdcard ${persist.fuse_sdcard}
+
+service fuse_sdcard1 /system/bin/sdcard -u 1023 -g 1023 /mnt/media_rw/sdcard1 /storage/sdcard1
+    class late_start
+    disabled
+
+service fuse_usb /system/bin/sdcard -u 1023 -g 1023 /mnt/media_rw/usb /storage/usb
+    class late_start
+    disabled
+
+service hcidump /system/bin/sh /system/etc/hcidump.sh
+    user bluetooth
+    group bluetooth system net_bt_admin net_admin
+    disabled
+    oneshot
+
+service hciattach_dut /system/bin/sh /system/etc/init.lge_dut.bt.sh
+   user bluetooth
+   group qcom_oncrpc bluetooth net_bt_admin
+   disabled
+   oneshot
+    
+service charger /charger
+    class charger
+
+
+on property:persist.sys.cabc_off=true
+    write /sys/devices/platform/mipi_lgit.1793/cabc_off 1
+
+on property:persist.sys.cabc_off=false
+    write /sys/devices/platform/mipi_lgit.1793/cabc_off 0
+
+
+# Limit to SoC reset (1) and independent SSR (3)
+on property:persist.sys.ssr.restart_level=1
+    write /sys/module/subsystem_restart/parameters/restart_level 1
+on property:persist.sys.ssr.restart_level=3
+    write /sys/module/subsystem_restart/parameters/restart_level 3
+
+# disable ramdump function, enable RIVA restart
+on property:ro.build.type=user
+   write /sys/module/subsystem_restart/parameters/restart_level 3
+   write /sys/module/subsystem_restart/parameters/enable_ramdumps 0
+   write /sys/module/wcnss_ssr_8960/parameters/enable_riva_ssr 1
+
+service conn_init /system/bin/logwrapper /system/bin/conn_init
+    class core
+    user system
+    group system wifi
+    oneshot
+

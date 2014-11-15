@@ -1,0 +1,4 @@
+#
+# system.prop for v500
+#
+persist.sys.cabc_off=true
