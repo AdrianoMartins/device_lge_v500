@@ -137,7 +137,7 @@ BOARD_SEPOLICY_UNION := \
         nfc.te \
         rild.te \
         surfaceflinger.te \
-        system.te \
+        system_server.te \
         ueventd.te \
         wpa.te
        
