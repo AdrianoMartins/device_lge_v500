@@ -32,4 +32,7 @@ def FullOTA_InstallEnd(info):
   info.script.AppendExtra('package_extract_file("boot.img", "/tmp/boot.img");')
   info.script.AppendExtra('assert(run_program("/system/bin/loki.sh") == 0);')
   info.script.AppendExtra('delete("/system/bin/loki.sh");')
-  info.script.AppendExtra('ui_print("Install Complete");')
+  info.script.AppendExtra('delete("/system/bin/mpdecision");')
+  info.script.AppendExtra('delete("/system/bin/thermald");')
+  info.script.AppendExtra('ui_print("Install Complete.");')
+  
