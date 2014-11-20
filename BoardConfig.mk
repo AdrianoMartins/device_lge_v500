@@ -117,29 +117,6 @@ TARGET_RECOVERY_LCD_BACKLIGHT_PATH := \"/sys/class/leds/lcd-backlight/brightness
 TARGET_RECOVERY_FSTAB = device/lge/v500/fstab.gvar
 
 BOARD_HAS_NO_SELECT_BUTTON := true
-
-BOARD_SEPOLICY_DIRS += \
-        device/lge/v500/sepolicy
-
-BOARD_SEPOLICY_UNION := \
-        app.te \
-        bluetooth.te \
-        device.te \
-        domain.te \
-        drmserver.te \
-        file.te \
-        file_contexts \
-        hci_init.te \
-        init_shell.te \
-        keystore.te \
-        mediaserver.te \
-        kickstart.te \
-        nfc.te \
-        rild.te \
-        surfaceflinger.te \
-        system_server.te \
-        ueventd.te \
-        wpa.te
        
 TARGET_RELEASETOOLS_EXTENSIONS := device/lge/v500/releasetools
 
