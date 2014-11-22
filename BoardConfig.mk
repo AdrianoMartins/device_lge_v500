@@ -127,5 +127,8 @@ COMMON_GLOBAL_CFLAGS += -DBOARD_CHARGING_CMDLINE_NAME='"androidboot.mode"' -DBOA
 BOARD_HARDWARE_CLASS := device/lge/v500/cmhw/
 
 # Compat
-TARGET_USES_LOGD := false# Display
+TARGET_USES_LOGD := false
+
+# Enable qcom bionic optimizations
+TARGET_USE_QCOM_BIONIC_OPTIMIZATION := true
 NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
