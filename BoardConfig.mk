@@ -129,6 +129,8 @@ BOARD_HARDWARE_CLASS := device/lge/v500/cmhw/
 # Compat
 TARGET_USES_LOGD := false
 
+# Media
+TARGET_ENABLE_QC_AV_ENHANCEMENTS := true
 # Enable qcom bionic optimizations
 TARGET_USE_QCOM_BIONIC_OPTIMIZATION := true
 NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
