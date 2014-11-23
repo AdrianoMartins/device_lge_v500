@@ -802,7 +802,7 @@ service netmgrd /system/bin/netmgrd
 service sensors /system/bin/sensors.qcom
     class late_start
     user root
-    group sensors radio system
+    group root sensors radio system
     disabled
 
 on property:ro.dsps.ready=true
