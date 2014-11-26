@@ -121,8 +121,6 @@ BOARD_USES_QC_TIME_SERVICES := true
 
 COMMON_GLOBAL_CFLAGS += -DBOARD_CHARGING_CMDLINE_NAME='"androidboot.mode"' -DBOARD_CHARGING_CMDLINE_VALUE='"chargerlogo"'
 
-BOARD_HARDWARE_CLASS := device/lge/v500/cmhw/
-
 # Logging
 TARGET_USES_LOGD := false
 
