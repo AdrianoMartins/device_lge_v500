@@ -639,13 +639,23 @@ on post-fs-data
     #Create directory from IMS services
     mkdir /data/shared 0755
     chown system system /data/shared
+    #Create directory used by sensor subsystem(dsps)
+    mkdir /data/system/sensors
+    chmod 665 /data/system/sensors
+    write /data/system/sensors/settings 1
+    chmod 660 /data/system/sensors/settings
 
     #Create directory for FOTA
     mkdir /data/fota 0771
     chown system system /data/fota
+    # AKM setting data
+    mkdir /data/misc/sensors
+    chmod 775 /data/misc/sensors
 
     #Create directory for hostapd
     mkdir /data/hostapd 0770 system wifi
+    mkdir /persist/sensors
+    chmod 775 /persist/sensors
 
     # Create /data/time folder for time-services
     mkdir /data/time/ 0700 system system
@@ -807,6 +817,7 @@ service sensors /system/bin/sensors.qcom
 
 on property:ro.dsps.ready=true
     start sensors
+    group root radio system
 
 on property:ro.use_data_netmgrd=false
     # netmgr not supported on specific target
