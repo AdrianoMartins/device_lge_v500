@@ -860,9 +860,8 @@ service wpa_supplicant /system/bin/wpa_supplicant \
     disabled
     oneshot
 
-# if G option added, the gateway do not update in the specific status. from jaeshick.shin@lge.com
-service dhcpcd_wlan0 /system/bin/dhcpcd -ABKL
-    class late_start
+service dhcpcd_wlan0 /system/bin/dhcpcd -aABDKL
+    class main
     disabled
     oneshot
 
@@ -872,13 +871,13 @@ service dhcpcd_wlan0 /system/bin/dhcpcd -ABKL
 #    disabled
 #    oneshot
 
-service dhcpcd_p2p /system/bin/dhcpcd -ABKLG
-    class late_start
+service dhcpcd_p2p /system/bin/dhcpcd -aABKL
+    class main
     disabled
     oneshot
 
 service iprenew_wlan0 /system/bin/dhcpcd -n
-    class late_start
+    class main
     disabled
     oneshot
 
