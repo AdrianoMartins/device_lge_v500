@@ -1026,3 +1026,9 @@ service conn_init /system/bin/logwrapper /system/bin/conn_init
     group system wifi
     oneshot
 
+# Run init.d scripts
+service sysinit /system/bin/logwrapper /system/xbin/busybox run-parts /system/etc/init.d
+	class main
+	user root
+	group shell
+	oneshot
