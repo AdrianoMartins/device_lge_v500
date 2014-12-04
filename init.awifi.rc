@@ -84,6 +84,7 @@ on early-fs
 on boot
     write /sys/devices/i2c-3/3-0024/cyttsp_update_fw 1
     write /sys/devices/i2c-3/3-005b/update_fw 1
+	write /sys/devices/i2c-3/3-004b/knock_on 1
 
 on post-fs-data
    mkdir /data/tombstones 0771 system system
