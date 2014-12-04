@@ -35,9 +35,8 @@ PRODUCT_AAPT_PREF_CONFIG := xhdpi
 PRODUCT_CHARACTERISTICS := tablet
 
 PRODUCT_PACKAGES += \
-    charger_res_images \
-    charger
-
+    charger_res_images
+    
 # Live Wallpapers
 PRODUCT_PACKAGES += \
         LiveWallpapers \
