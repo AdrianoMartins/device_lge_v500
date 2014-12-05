@@ -40,6 +40,10 @@ BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x02000000
 
 BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 user_debug=31 msm_rtb.filter=0x3F ehci-hcd.park=3 lpj=67677 androidboot.hardware=awifi vmalloc=600M androidboot.selinux=permissive
 
+BOARD_CUSTOM_BOOTIMG := true
+BOARD_CUSTOM_BOOTIMG_MK := $(LOCAL_PATH)/mkbootimg.mk
+TARGET_REQUIRES_BUMP := true
+
 BOARD_USES_ALSA_AUDIO:= true
 BOARD_USES_LEGACY_ALSA_AUDIO:= false
 BOARD_USES_FLUENCE_INCALL := true
