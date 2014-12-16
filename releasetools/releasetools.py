@@ -29,6 +29,7 @@ def FullOTA_InstallBegin(info):
 def FullOTA_InstallEnd(info):
   info.script.script = [cmd for cmd in info.script.script if not "boot.img" in cmd]
   info.script.script = [cmd for cmd in info.script.script if not "show_progress(0.100000, 0);" in cmd]
+  info.script.AppendExtra('ifelse(is_mounted("/system"),ui_print(""),mount("ext4", "EMMC", "/dev/block/platform/msm_sdcc.1/by-name/system", "/system", "max_batch_time=0,commit=1,data=ordered,barrier=1,errors=panic,nodelalloc"));')
   info.script.AppendExtra('package_extract_file("boot.img", "/tmp/boot.img");')
   info.script.AppendExtra('assert(run_program("/system/bin/loki.sh") == 0);')
   info.script.AppendExtra('delete("/system/bin/loki.sh");')
