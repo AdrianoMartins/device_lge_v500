@@ -103,19 +103,6 @@ PRODUCT_COPY_FILES += \
 	$(LOCAL_PATH)/gps.conf:system/etc/gps.conf \
 	$(LOCAL_PATH)/sap.conf:system/etc/sap.conf
 
-# GPS
-PRODUCT_PACKAGES += \
-        libloc_adapter \
-        libloc_eng \
-        libloc_api_v02 \
-        libloc_ds_api \
-        libloc_core \
-        libizat_core \
-        libgeofence \
-        libgps.utils \
-        gps.msm8960 \
-        flp.msm8960
-
 PRODUCT_PROPERTY_OVERRIDES += \
 	ro.opengles.version=196608
 
@@ -125,8 +112,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
 	persist.audio.handset.mic=digital \
 	persist.audio.fluence.mode=endfire \
-	persist.audio.lowlatency.rec=false \
-	af.resampler.quality=4
+	persist.audio.lowlatency.rec=false
 
 #Upto 3 layers can go through overlays
 PRODUCT_PROPERTY_OVERRIDES += persist.hwc.mdpcomp.enable=true
@@ -139,9 +125,7 @@ PRODUCT_PACKAGES += \
 
 # Filesystem management tools
 PRODUCT_PACKAGES += \
-	make_ext4fs \
-	e2fsck \
-	setup_fs	
+	e2fsck
 
 PRODUCT_PACKAGES += \
 	libgenlock \

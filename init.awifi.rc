@@ -238,7 +238,7 @@ on post-fs-data
    write /sys/module/rpm_resources/enable_low_power/pxo 1
    write /sys/module/rpm_resources/enable_low_power/vdd_dig 1
    write /sys/module/rpm_resources/enable_low_power/vdd_mem 1
-   write /sys/module/pm_8x60/modes/cpu0/retention/idle_enabled 1
+   write /sys/module/pm_8x60/modes/cpu0/retention/idle_enabled 0
    write /sys/module/pm_8x60/modes/cpu1/retention/idle_enabled 1
    write /sys/module/pm_8x60/modes/cpu2/retention/idle_enabled 1
    write /sys/module/pm_8x60/modes/cpu3/retention/idle_enabled 1
@@ -247,9 +247,9 @@ on post-fs-data
    write /sys/module/pm_8x60/modes/cpu2/power_collapse/suspend_enabled 1
    write /sys/module/pm_8x60/modes/cpu3/power_collapse/suspend_enabled 1
    write /sys/module/pm_8x60/modes/cpu0/standalone_power_collapse/suspend_enabled 1
-   write /sys/module/pm_8x60/modes/cpu1/standalone_power_collapse/suspend_enabled 1
-   write /sys/module/pm_8x60/modes/cpu2/standalone_power_collapse/suspend_enabled 1
-   write /sys/module/pm_8x60/modes/cpu3/standalone_power_collapse/suspend_enabled 1
+   write /sys/module/pm_8x60/modes/cpu1/standalone_power_collapse/suspend_enabled 0
+   write /sys/module/pm_8x60/modes/cpu2/standalone_power_collapse/suspend_enabled 0
+   write /sys/module/pm_8x60/modes/cpu3/standalone_power_collapse/suspend_enabled 0
    write /sys/module/pm_8x60/modes/cpu0/standalone_power_collapse/idle_enabled 1
    write /sys/module/pm_8x60/modes/cpu1/standalone_power_collapse/idle_enabled 1
    write /sys/module/pm_8x60/modes/cpu2/standalone_power_collapse/idle_enabled 1
@@ -302,6 +302,7 @@ on post-fs-data
    chmod 0664 /sys/devices/system/cpu/cpu1/online
    chmod 0664 /sys/devices/system/cpu/cpu2/online
    chmod 0664 /sys/devices/system/cpu/cpu3/online
+   write /dev/cpuctl/apps/cpu.notify_on_migrate 1
    # set DCVS parameters for CPU
    write /sys/module/msm_dcvs/cores/cpu0/slack_time_max_us 40000
    write /sys/module/msm_dcvs/cores/cpu0/slack_time_min_us 40000
@@ -592,6 +593,7 @@ on fs
 
 # msm specific files that need to be created on /data
 on post-fs-data
+    write /sys/kernel/boot_adsp/boot 1
     # we will remap this as /mnt/sdcard with the sdcard fuse tool
     mkdir /data/media 0770 media_rw media_rw
     chown media_rw media_rw /data/media
@@ -818,7 +820,7 @@ service sensors /system/bin/sensors.qcom
 
 on property:ro.dsps.ready=true
     start sensors
-    group root radio system
+    group root sensors radio system
 
 on property:ro.use_data_netmgrd=false
     # netmgr not supported on specific target
@@ -862,7 +864,7 @@ service wpa_supplicant /system/bin/wpa_supplicant \
     oneshot
 
 service dhcpcd_wlan0 /system/bin/dhcpcd -aABDKL
-    class main
+    class late_start
     disabled
     oneshot
 
@@ -873,12 +875,12 @@ service dhcpcd_wlan0 /system/bin/dhcpcd -aABDKL
 #    oneshot
 
 service dhcpcd_p2p /system/bin/dhcpcd -aABKL
-    class main
+    class late_start
     disabled
     oneshot
 
 service iprenew_wlan0 /system/bin/dhcpcd -n
-    class main
+    class late_start
     disabled
     oneshot
 
