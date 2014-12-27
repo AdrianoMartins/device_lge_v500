@@ -417,24 +417,24 @@ on boot
 #LGE_CHANGE_E 20130830 goensoo.kim [AWIFI][Touch] enable smart_cover feature
 
 # LG_BTUI, 20120215, Permission for Bluetooth - [S]
-    chown bluetooth bluetooth /sys/module/bluetooth_power/parameters/power
-    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
-    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
-    chown bluetooth bluetooth /proc/bluetooth/sleep/proto
-    chown bluetooth bluetooth /proc/bluetooth/sleep/btwake        
+    chown bluetooth net_bt_stack /sys/module/bluetooth_power/parameters/power
+    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill0/type
+    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill0/state
+    chown bluetooth net_bt_stack /proc/bluetooth/sleep/proto
+    chown bluetooth net_bt_stack /proc/bluetooth/sleep/btwake        
     chown system system /sys/module/sco/parameters/disable_esco
-    chown bluetooth bluetooth /sys/module/hci_smd/parameters/hcismd_set
+    chown bluetooth net_bt_stack /sys/module/hci_smd/parameters/hcismd_set
     chmod 0660 /sys/module/bluetooth_power/parameters/power
     chmod 0660 /sys/module/hci_smd/parameters/hcismd_set
     chmod 0660 /sys/class/rfkill/rfkill0/state
     chmod 0660 /proc/bluetooth/sleep/proto
     chmod 0660 /proc/bluetooth/sleep/btwake 
-    chown bluetooth bluetooth /dev/ttyHS0
+    chown bluetooth net_bt_stack /dev/ttyHS0
     chmod 0660 /dev/ttyHS0
-    chown bluetooth bluetooth /sys/devices/platform/msm_serial_hs.0/clock
+    chown bluetooth net_bt_stack /sys/devices/platform/msm_serial_hs.0/clock
     chmod 0660 /sys/devices/platform/msm_serial_hs.0/clock
 	chmod 0600 /dev/btlock
-	chown bluetooth bluetooth /dev/btlock    
+	chown bluetooth net_bt_stack /dev/btlock    
 # LGE_UPDATE_S 20130511 keunhui.park setup for IRRC
 	chown system audio /dev/msm_IRRC_pcm_dec
 	chmod 0660 /dev/msm_IRRC_pcm_dec
@@ -442,7 +442,7 @@ on boot
 
 
 #    chmod 0660 /dev/ttyHS2
-#    chown bluetooth bluetooth /dev/ttyHS2
+#    chown bluetooth net_bt_stack /dev/ttyHS2
 # LG_BTUI, 20120215, Permission for Bluetooth - [E]
 
     #Create QMUX deamon socket area
@@ -746,7 +746,7 @@ service bluetoothd /system/bin/logwrapper /system/bin/bluetoothd -n
 service hciattach /system/bin/sh /system/etc/init.qcom.bt.sh
     class late_start
     user bluetooth
-    group qcom_oncrpc bluetooth net_bt_admin  system
+    group qcom_oncrpc bluetooth net_bt_admin system
     disabled
     oneshot
 
