@@ -166,7 +166,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 PRODUCT_PROPERTY_OVERRIDES += \
 	wifi.interface=wlan0 \
-	wifi.supplicant_scan_interval=15
+	wifi.supplicant_scan_interval=50
 
 # Enable AAC 5.1 output
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -221,6 +221,11 @@ PRODUCT_PROPERTY_OVERRIDES += \
 	ro.radio.noril=true \
 	ro.carrier=wifi-only
 
+PRODUCT_PROPERTY_OVERRIDES += \
+    view.scroll_friction=1 \
+    ro.min_pointer_dur=8 \
+    ro.min_fling_velocity=8000 \
+    ro.max_fling_velocity=16000
 
 $(call inherit-product, hardware/qcom/msm8960/msm8960.mk)
 
