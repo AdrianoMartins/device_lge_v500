@@ -202,7 +202,8 @@ PRODUCT_PACKAGES += \
 	hostapd \
 	dhcpcd.conf \
 	wpa_supplicant \
-	wpa_supplicant.conf
+	wpa_supplicant.conf \
+	busybox
 
 PRODUCT_COPY_FILES += \
 	$(LOCAL_PATH)/init.qcom.bt.sh:system/etc/init.qcom.bt.sh
