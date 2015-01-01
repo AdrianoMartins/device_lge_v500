@@ -521,18 +521,6 @@ on boot
     # an ack packet comes out of order
     write /proc/sys/net/netfilter/nf_conntrack_tcp_be_liberal 1
 
-#LGE_CHANGE_S, minjeon.kim@lge.com 2012-06-29 for performance
-# Define TCP buffer sizes for various networks
-#   ReadMin, ReadInitial, ReadMax, WriteMin, WriteInitial, WriteMax,
-    setprop net.tcp.buffersize.default 8096,87380,110208,4096,16384,110208
-    setprop net.tcp.buffersize.lte     8096,140625,3461120,4096,140625,3461120
-    setprop net.tcp.buffersize.umts    8096,140625,3461120,4096,140625,3461120
-    setprop net.tcp.buffersize.hspa    8096,140625,3461120,4096,140625,3461120
-    setprop net.tcp.buffersize.hsupa   8096,140625,3461120,4096,140625,3461120
-    setprop net.tcp.buffersize.hsdpa   8096,140625,3461120,4096,140625,3461120
-    setprop net.tcp.buffersize.hspap   8096,140625,3461120,4096,140625,3461120
-    setprop net.tcp.buffersize.edge    8096,87380,110208,4096,16384,35040
-    setprop net.tcp.buffersize.gprs    8096,87380,110208,4096,8760,11680
 # Assign TCP buffer thresholds to be ceiling value of technology maximums
 # Increased technology maximums should be reflected here.
     write /proc/sys/net/core/rmem_max  3461120
