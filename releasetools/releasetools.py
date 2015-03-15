@@ -24,7 +24,7 @@
 
 def FullOTA_InstallBegin(info):
   info.script.AppendExtra('ifelse(is_mounted("/system"),unmount("/system"),ui_print(""));')
-  info.script.AppendExtra('ui_print("Installing Android 5.0");')
+  info.script.AppendExtra('ui_print("Installing Android 5.1");')
 
 def FullOTA_InstallEnd(info):
   info.script.script = [cmd for cmd in info.script.script if not "boot.img" in cmd]
