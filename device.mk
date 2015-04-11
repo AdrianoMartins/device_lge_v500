@@ -13,21 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-
-# Try to build the kernel
-#TARGET_KERNEL_SOURCE := kernel
-#TARGET_KERNEL_CONFIG := awifi-perf_defconfig
-
-#TARGET_PREBUILT_KERNEL := $(KERNEL_OUT)/arch/arm/boot/zImage
-ifeq ($(TARGET_PREBUILT_KERNEL),)
-LOCAL_KERNEL := device/lge/v500/zImage
-else
-LOCAL_KERNEL := $(TARGET_PREBUILT_KERNEL)
-endif
-	
-PRODUCT_COPY_FILES := \
-	$(LOCAL_KERNEL):kernel
 	
 PRODUCT_AAPT_CONFIG := normal hdpi xhdpi
 PRODUCT_AAPT_PREF_CONFIG := xhdpi
