@@ -44,6 +44,9 @@ BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x02000000
 
 BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 user_debug=31 msm_rtb.filter=0x3F ehci-hcd.park=3 lpj=67677 androidboot.hardware=awifi vmalloc=600M androidboot.selinux=permissive
 
+BOARD_CUSTOM_BOOTIMG_MK := device/lge/v500/mkbootimg.mk
+BOARD_CUSTOM_BOOTIMG := true
+
 BOARD_USES_ALSA_AUDIO:= true
 BOARD_USES_LEGACY_ALSA_AUDIO:= false
 BOARD_USES_FLUENCE_INCALL := true
@@ -73,7 +76,6 @@ OVERRIDE_RS_DRIVER := libRSDriver_adreno.so
 # Recovery
 BOARD_USE_CUSTOM_RECOVERY_FONT := \"roboto_23x41.h\"
 RECOVERY_FSTAB_VERSION = 2
-ENABLE_LOKI_RECOVERY := true
 BOARD_RECOVERY_SWIPE := true
 
 TARGET_USERIMAGES_USE_EXT4 := true

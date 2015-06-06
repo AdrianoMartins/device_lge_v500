@@ -20,26 +20,26 @@ PRODUCT_AAPT_PREF_CONFIG := xhdpi
 PRODUCT_CHARACTERISTICS := tablet
 
 PRODUCT_PACKAGES += \
-    charger_res_images
+	charger_res_images
     
 # Live Wallpapers
 PRODUCT_PACKAGES += \
-        LiveWallpapers \
-        LiveWallpapersPicker \
-        VisualizationWallpapers \
-        librs_jni
+	LiveWallpapers \
+	LiveWallpapersPicker \
+	VisualizationWallpapers \
+	librs_jni
 
 PRODUCT_COPY_FILES += \
-        $(LOCAL_PATH)/init.awifi.usb.rc:root/init.awifi.usb.rc \
+	$(LOCAL_PATH)/init.awifi.usb.rc:root/init.awifi.usb.rc \
 	$(LOCAL_PATH)/init.awifi.rc:root/init.awifi.rc \
 	$(LOCAL_PATH)/fstab.gvar:root/fstab.awifi \
 	$(LOCAL_PATH)/ueventd.awifi.rc:root/ueventd.awifi.rc
 
 PRODUCT_COPY_FILES += \
-        $(LOCAL_PATH)/WCNSS_cfg.dat:system/vendor/firmware/wlan/prima/WCNSS_cfg.dat \
-        $(LOCAL_PATH)/WCNSS_qcom_cfg.ini:system/etc/wifi/WCNSS_qcom_cfg.ini \
-        $(LOCAL_PATH)/WCNSS_qcom_cfg.ini:system/firmware/wlan/prima/WCNSS_qcom_cfg.ini \
-        $(LOCAL_PATH)/WCNSS_qcom_wlan_nv.bin:system/etc/wifi/WCNSS_qcom_wlan_nv.bin
+	$(LOCAL_PATH)/WCNSS_cfg.dat:system/vendor/firmware/wlan/prima/WCNSS_cfg.dat \
+	$(LOCAL_PATH)/WCNSS_qcom_cfg.ini:system/etc/wifi/WCNSS_qcom_cfg.ini \
+	$(LOCAL_PATH)/WCNSS_qcom_cfg.ini:system/firmware/wlan/prima/WCNSS_qcom_cfg.ini \
+	$(LOCAL_PATH)/WCNSS_qcom_wlan_nv.bin:system/etc/wifi/WCNSS_qcom_wlan_nv.bin
 
 PRODUCT_COPY_FILES += \
 	$(LOCAL_PATH)/audio_policy.conf:system/etc/audio_policy.conf
@@ -195,12 +195,6 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_PROPERTY_OVERRIDES += \
 	ro.bt.bdaddr_path=/data/misc/bdaddr
-
-# This hw ships locked, work around it with loki
-PRODUCT_PACKAGES += \
-	loki.sh \
-	loki_tool_static_gpad \
-	recovery-transform.sh
 
 PRODUCT_PROPERTY_OVERRIDES += \
 	ro.radio.noril=true \

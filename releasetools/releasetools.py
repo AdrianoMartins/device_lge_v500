@@ -1,5 +1,4 @@
 # Copyright (C) 2012 The Android Open Source Project
-# Copyright (C) 2013 The CyanogenMod Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,27 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-#
-#
-# This leverages the loki_patch utility created by djrbliss which allows us
-# to bypass the bootloader checks on jfltevzw and jflteatt
-# See here for more information on loki: https://github.com/djrbliss/loki
-#
-
-"""Custom OTA commands for LG devices with locked bootloaders"""
 
 def FullOTA_InstallBegin(info):
   info.script.AppendExtra('ifelse(is_mounted("/system"),unmount("/system"),ui_print(""));')
-  info.script.AppendExtra('ui_print("Installing Android 5.1");')
+  info.script.AppendExtra('ui_print("Installing Android 5.x");')
 
 def FullOTA_InstallEnd(info):
-  info.script.script = [cmd for cmd in info.script.script if not "boot.img" in cmd]
-  info.script.script = [cmd for cmd in info.script.script if not "show_progress(0.100000, 0);" in cmd]
   info.script.AppendExtra('ifelse(is_mounted("/system"),ui_print(""),mount("ext4", "EMMC", "/dev/block/platform/msm_sdcc.1/by-name/system", "/system", "max_batch_time=0,commit=1,data=ordered,barrier=1,errors=panic,nodelalloc"));')
-  info.script.AppendExtra('package_extract_file("boot.img", "/tmp/boot.img");')
-  info.script.AppendExtra('assert(run_program("/system/bin/loki.sh") == 0);')
-  info.script.AppendExtra('delete("/system/bin/loki.sh");')
-  info.script.AppendExtra('delete("/system/bin/mpdecision");')
-  info.script.AppendExtra('delete("/system/bin/thermald");')
-  info.script.AppendExtra('ui_print("Install Complete.");')
+  info.script.AppendExtra('ui_print("Installation Complete");')
   
