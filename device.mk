@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2013 The CyanogenMod Project
+# Copyright 2014 The Android Open Source Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,37 +19,15 @@ PRODUCT_AAPT_PREF_CONFIG := xhdpi
 
 PRODUCT_CHARACTERISTICS := tablet
 
-PRODUCT_PACKAGES += \
-	charger_res_images
-    
-# Live Wallpapers
-PRODUCT_PACKAGES += \
-	LiveWallpapers \
-	LiveWallpapersPicker \
-	VisualizationWallpapers \
-	librs_jni
-
+TARGET_SCREEN_HEIGHT := 1920
+TARGET_SCREEN_WIDTH := 1200
+  
+# Init
 PRODUCT_COPY_FILES += \
 	$(LOCAL_PATH)/init.awifi.usb.rc:root/init.awifi.usb.rc \
 	$(LOCAL_PATH)/init.awifi.rc:root/init.awifi.rc \
 	$(LOCAL_PATH)/fstab.gvar:root/fstab.awifi \
 	$(LOCAL_PATH)/ueventd.awifi.rc:root/ueventd.awifi.rc
-
-PRODUCT_COPY_FILES += \
-	$(LOCAL_PATH)/WCNSS_cfg.dat:system/vendor/firmware/wlan/prima/WCNSS_cfg.dat \
-	$(LOCAL_PATH)/WCNSS_qcom_cfg.ini:system/etc/wifi/WCNSS_qcom_cfg.ini \
-	$(LOCAL_PATH)/WCNSS_qcom_cfg.ini:system/firmware/wlan/prima/WCNSS_qcom_cfg.ini \
-	$(LOCAL_PATH)/WCNSS_qcom_wlan_nv.bin:system/etc/wifi/WCNSS_qcom_wlan_nv.bin
-
-PRODUCT_COPY_FILES += \
-	$(LOCAL_PATH)/audio_policy.conf:system/etc/audio_policy.conf
-
-PRODUCT_COPY_FILES += \
-	$(LOCAL_PATH)/media_profiles.xml:system/etc/media_profiles.xml \
-	frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:system/etc/media_codecs_google_audio.xml \
-	frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:system/etc/media_codecs_google_telephony.xml \
-	frameworks/av/media/libstagefright/data/media_codecs_google_video.xml:system/etc/media_codecs_google_video.xml \
-	$(LOCAL_PATH)/media_codecs.xml:system/etc/media_codecs.xml
 
 # Prebuilt kl and kcm keymaps
 PRODUCT_COPY_FILES += \
@@ -83,35 +61,20 @@ PRODUCT_COPY_FILES += \
 	frameworks/native/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
 	frameworks/native/data/etc/android.hardware.bluetooth_le.xml:system/etc/permissions/android.hardware.bluetooth_le.xml
 
-# GPS configuration
+# Bluetooth
+PRODUCT_PACKAGES += \
+    init.qcom.bt.sh
+
+# GPS
 PRODUCT_COPY_FILES += \
 	$(LOCAL_PATH)/gps.conf:system/etc/gps.conf \
 	$(LOCAL_PATH)/sap.conf:system/etc/sap.conf
 
-PRODUCT_PROPERTY_OVERRIDES += \
-	ro.opengles.version=196608
-
-# Audio Configuration
-# FIXME: Remove persist.audio.handset.mic and persist.audio.fluence.mode
-#        while switching new audio HAL from legacy HAL
-PRODUCT_PROPERTY_OVERRIDES += \
-	persist.audio.handset.mic=digital \
-	persist.audio.fluence.mode=endfire \
-	persist.audio.lowlatency.rec=false
-
-#Upto 3 layers can go through overlays
-PRODUCT_PROPERTY_OVERRIDES += persist.hwc.mdpcomp.enable=true
-
-PRODUCT_TAGS += dalvik.gc.type-precise
-
-PRODUCT_PACKAGES += \
-	librs_jni \
-	com.android.future.usb.accessory
-
-# Filesystem management tools
+# Filesystem
 PRODUCT_PACKAGES += \
 	e2fsck
 
+# Display
 PRODUCT_PACKAGES += \
 	libgenlock \
 	liboverlay \
@@ -120,6 +83,7 @@ PRODUCT_PACKAGES += \
 	copybit.msm8960 \
 	memtrack.msm8960
 
+# Audio
 PRODUCT_PACKAGES += \
 	audio_policy.msm8960 \
 	audio.primary.msm8960 \
@@ -127,7 +91,22 @@ PRODUCT_PACKAGES += \
 	audio.usb.default \
 	audio.r_submix.default \
 	libaudio-resampler
+	
+PRODUCT_PROPERTY_OVERRIDES += \
+	persist.audio.handset.mic=digital \
+	persist.audio.fluence.mode=endfire \
+	persist.audio.lowlatency.rec=false
 
+PRODUCT_PROPERTY_OVERRIDES += \
+	media.aac_51_output_enabled=true
+
+PRODUCT_PROPERTY_OVERRIDES += \
+        debug.egl.recordable.rgba8888=1
+
+PRODUCT_COPY_FILES += \
+	$(LOCAL_PATH)/mixer_paths.xml:system/etc/mixer_paths.xml \
+	$(LOCAL_PATH)/audio_policy.conf:system/etc/audio_policy.conf
+              
 # Media
 PRODUCT_PACKAGES += \
     libc2dcolorconvert \
@@ -143,35 +122,68 @@ PRODUCT_PACKAGES += \
     libOmxVenc \
     libstagefrighthw
 
+PRODUCT_PROPERTY_OVERRIDES += \
+	drm.service.enabled=true
+
+PRODUCT_COPY_FILES += \
+	$(LOCAL_PATH)/media_profiles.xml:system/etc/media_profiles.xml \
+	frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:system/etc/media_codecs_google_audio.xml \
+	frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:system/etc/media_codecs_google_telephony.xml \
+	frameworks/av/media/libstagefright/data/media_codecs_google_video.xml:system/etc/media_codecs_google_video.xml \
+	$(LOCAL_PATH)/media_codecs.xml:system/etc/media_codecs.xml
+	
+# Wifi
+PRODUCT_PACKAGES += \
+    conn_init \
+	hwaddrs \
+	macloader \
+    libwpa_client \
+    hostapd \
+    dhcpcd.conf \
+    wpa_supplicant \
+    wpa_supplicant.conf
+
+PRODUCT_PACKAGES += \
+    p2p_supplicant_overlay.conf \
+    wpa_supplicant_overlay.conf
+
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/wifi/WCNSS_cfg.dat:system/vendor/firmware/wlan/prima/WCNSS_cfg.dat \
+    $(LOCAL_PATH)/wifi/WCNSS_qcom_cfg.ini:system/etc/wifi/WCNSS_qcom_cfg.ini \
+    $(LOCAL_PATH)/wifi/WCNSS_qcom_wlan_nv.bin:system/etc/wifi/WCNSS_qcom_wlan_nv.bin \
+    $(LOCAL_PATH)/wifi/WCNSS_qcom_wlan_nv_init.bin:system/vendor/firmware/wlan/prima/WCNSS_qcom_wlan_nv_init.bin
+
+PRODUCT_PROPERTY_OVERRIDES += \
+    wifi.interface=wlan0 \
+    wifi.supplicant_scan_interval=15
+
+# USB
+PRODUCT_PACKAGES += \
+    com.android.future.usb.accessory
+
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
+    persist.sys.usb.config=mtp
+
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.sys.isUsbOtgEnabled=1
+
+# Live Wallpapers
+PRODUCT_PACKAGES += \
+	LiveWallpapers \
+	LiveWallpapersPicker \
+	VisualizationWallpapers
+
+# Other
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 	rild.libpath=/system/lib/libril-qc-qmi-1.so
 
 PRODUCT_PROPERTY_OVERRIDES += \
-	drm.service.enabled=true
-
-PRODUCT_PROPERTY_OVERRIDES += \
-	wifi.interface=wlan0 \
-	wifi.supplicant_scan_interval=50
-
-# Enable AAC 5.1 output
-PRODUCT_PROPERTY_OVERRIDES += \
-	media.aac_51_output_enabled=true
-
-PRODUCT_PROPERTY_OVERRIDES += \
-        debug.egl.recordable.rgba8888=1
-
-PRODUCT_PROPERTY_OVERRIDES += \
 	ro.qc.sensors.wl_dis=true \
-	ro.qualcomm.sensors.smd=true
-
-PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-	persist.sys.usb.config=mtp
+	ro.qualcomm.sensors.smd=true \
+	ro.qc.sdk.sensors.gestures=true
 
 PRODUCT_PACKAGES += \
 	lights.msm8960
-
-PRODUCT_COPY_FILES += \
-        $(LOCAL_PATH)/mixer_paths.xml:system/etc/mixer_paths.xml
 
 PRODUCT_COPY_FILES += \
 	$(LOCAL_PATH)/thermald.conf:system/etc/thermald.conf
@@ -180,21 +192,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 	ro.sf.lcd_density=320
 
 PRODUCT_PACKAGES += \
-	conn_init \
-	hwaddrs \
-	macloader \
-	libwpa_client \
-	hostapd \
-	dhcpcd.conf \
-	wpa_supplicant \
-	wpa_supplicant.conf \
 	busybox
-
-PRODUCT_COPY_FILES += \
-	$(LOCAL_PATH)/init.qcom.bt.sh:system/etc/init.qcom.bt.sh
-
-PRODUCT_PROPERTY_OVERRIDES += \
-	ro.bt.bdaddr_path=/data/misc/bdaddr
 
 PRODUCT_PROPERTY_OVERRIDES += \
 	ro.radio.noril=true \
@@ -205,7 +203,24 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.min_pointer_dur=8 \
     ro.min_fling_velocity=8000 \
     ro.max_fling_velocity=16000
+    
+PRODUCT_PROPERTY_OVERRIDES += \
+	ro.opengles.version=196608
 
+PRODUCT_PROPERTY_OVERRIDES += persist.hwc.mdpcomp.enable=true
+
+PRODUCT_TAGS += dalvik.gc.type-precise
+
+PRODUCT_PACKAGES += \
+	librs_jni
+	
+PRODUCT_PACKAGES += \
+	charger_res_images
+
+# Power HAL
+PRODUCT_PACKAGES += \
+    power.msm8960
+	   
 $(call inherit-product, hardware/qcom/msm8960/msm8960.mk)
-
 $(call inherit-product, frameworks/native/build/tablet-7in-xhdpi-2048-dalvik-heap.mk)
+

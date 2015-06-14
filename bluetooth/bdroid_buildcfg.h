@@ -17,14 +17,14 @@
 #ifndef _BDROID_BUILDCFG_H
 #define _BDROID_BUILDCFG_H
 
+#define BTM_DEF_LOCAL_NAME   "LG G Pad 8.3"
+
 // Networking, Capturing, Object Transfer
 // MAJOR CLASS: COMPUTER
 // MINOR CLASS: PALM SIZE PC/PDA
 #define BTA_DM_COD {0x1A, 0x01, 0x14}
 
-#define BTM_DEF_LOCAL_NAME   "LG GPad"
 #define BTA_DISABLE_DELAY 1000 /* in milliseconds */
 #define BTA_HOST_INTERLEAVE_SEARCH TRUE
-#define PAN_NAP_DISABLED TRUE
-
+#define BTA_SKIP_BLE_READ_REMOTE_FEAT TRUE
 #endif

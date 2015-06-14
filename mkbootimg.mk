@@ -1,6 +1,6 @@
 LOCAL_PATH := $(call my-dir)
 
-BUMP := $(LOCAL_PATH)/open_bump.py
+BUMP := $(LOCAL_PATH)/bump.py
 
 ## Overload bootimg generation: Same as the original, + BUMP
 $(INSTALLED_BOOTIMAGE_TARGET): $(MKBOOTIMG) $(INTERNAL_BOOTIMAGE_FILES)

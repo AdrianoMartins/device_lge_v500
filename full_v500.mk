@@ -11,4 +11,4 @@ DEVICE_PACKAGE_OVERLAYS := $(LOCAL_PATH)/overlay
 
 # Inherit from hardware-specific part of the product configuration
 $(call inherit-product, device/lge/v500/device.mk)
-$(call inherit-product-if-exists, vendor/lge/v500/v500-vendor.mk)
+$(call inherit-product, vendor/lge/v500/v500-vendor.mk)
