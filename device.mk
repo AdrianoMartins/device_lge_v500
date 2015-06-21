@@ -13,7 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-	
+
+# Characteristics	
 PRODUCT_AAPT_CONFIG := normal hdpi xhdpi
 PRODUCT_AAPT_PREF_CONFIG := xhdpi
 
@@ -101,7 +102,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 	media.aac_51_output_enabled=true
 
 PRODUCT_PROPERTY_OVERRIDES += \
-        debug.egl.recordable.rgba8888=1
+    debug.egl.recordable.rgba8888=1
 
 PRODUCT_COPY_FILES += \
 	$(LOCAL_PATH)/mixer_paths.xml:system/etc/mixer_paths.xml \
@@ -167,13 +168,17 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.isUsbOtgEnabled=1
 
+# Power HAL
+PRODUCT_PACKAGES += \
+    power.msm8960
+
 # Live Wallpapers
 PRODUCT_PACKAGES += \
 	LiveWallpapers \
 	LiveWallpapersPicker \
 	VisualizationWallpapers
 
-# Other
+# Other - Hardware
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 	rild.libpath=/system/lib/libril-qc-qmi-1.so
 
@@ -181,6 +186,9 @@ PRODUCT_PROPERTY_OVERRIDES += \
 	ro.qc.sensors.wl_dis=true \
 	ro.qualcomm.sensors.smd=true \
 	ro.qc.sdk.sensors.gestures=true
+
+PRODUCT_PROPERTY_OVERRIDES += \
+	ro.opengles.version=196608
 
 PRODUCT_PACKAGES += \
 	lights.msm8960
@@ -190,37 +198,25 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_PROPERTY_OVERRIDES += \
 	ro.sf.lcd_density=320
-
-PRODUCT_PACKAGES += \
-	busybox
-
-PRODUCT_PROPERTY_OVERRIDES += \
 	ro.radio.noril=true \
 	ro.carrier=wifi-only
 
+# Other - System
 PRODUCT_PROPERTY_OVERRIDES += \
     view.scroll_friction=1 \
     ro.min_pointer_dur=8 \
     ro.min_fling_velocity=8000 \
     ro.max_fling_velocity=16000
-    
-PRODUCT_PROPERTY_OVERRIDES += \
-	ro.opengles.version=196608
 
 PRODUCT_PROPERTY_OVERRIDES += persist.hwc.mdpcomp.enable=true
-
 PRODUCT_TAGS += dalvik.gc.type-precise
 
 PRODUCT_PACKAGES += \
-	librs_jni
-	
-PRODUCT_PACKAGES += \
-	charger_res_images
+	librs_jni \
+	charger_res_images \
+	busybox
 
-# Power HAL
-PRODUCT_PACKAGES += \
-    power.msm8960
-	   
+# Inherit	   
 $(call inherit-product, hardware/qcom/msm8960/msm8960.mk)
 $(call inherit-product, frameworks/native/build/tablet-7in-xhdpi-2048-dalvik-heap.mk)
 
