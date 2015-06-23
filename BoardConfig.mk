@@ -26,6 +26,10 @@ TARGET_OTA_ASSERT_DEVICE := awifi,v500
 
 # Audio
 BOARD_USES_ALSA_AUDIO:= true
+BOARD_USES_LEGACY_ALSA_AUDIO:= false
+BOARD_USES_FLUENCE_INCALL := true
+BOARD_USES_SEPERATED_AUDIO_INPUT := true
+BOARD_HAVE_LOW_LATENCY_AUDIO := true
 
 # Bionic
 MALLOC_IMPL := dlmalloc
@@ -48,8 +52,8 @@ BOARD_CHARGER_SHOW_PERCENTAGE := true
 COMMON_GLOBAL_CFLAGS += -DBOARD_CHARGING_CMDLINE_NAME='"androidboot.mode"' -DBOARD_CHARGING_CMDLINE_VALUE='"chargerlogo"'
 
 # Flags
-TARGET_GLOBAL_CFLAGS += -mfpu=neon -mfloat-abi=softfp
-TARGET_GLOBAL_CPPFLAGS += -mfpu=neon -mfloat-abi=softfp
+TARGET_GLOBAL_CFLAGS += -mtune=cortex-a15 -mfpu=neon-vfpv4 -mfloat-abi=softfp -ffast-math
+TARGET_GLOBAL_CPPFLAGS += -mtune=cortex-a15 -mfpu=neon-vfpv4 -mfloat-abi=softfp -ffast-math
 
 # Fonts
 EXTENDED_FONT_FOOTPRINT := true
@@ -62,13 +66,11 @@ TARGET_USES_C2D_COMPOSITION := true
 TARGET_DISPLAY_USE_RETIRE_FENCE := true
 OVERRIDE_RS_DRIVER := libRSDriver_adreno.so
 
-# Hardware tunables
-BOARD_HARDWARE_CLASS := device/lge/awifi/cmhw/
-
 # Kernel
 TARGET_KERNEL_SOURCE := kernel/lge/awifi
-TARGET_KERNEL_CONFIG := cyanogenmod_awifi_defconfig
-BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 user_debug=31 msm_rtb.filter=0x3F ehci-hcd.park=3 lpj=67677 androidboot.hardware=awifi vmalloc=400M
+TARGET_KERNEL_CONFIG := aosp_awifi_defconfig
+KERNEL_DEFCONFIG := aosp_awifi_defconfig
+BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 user_debug=31 msm_rtb.filter=0x3F ehci-hcd.park=3 lpj=67677 androidboot.hardware=awifi vmalloc=400M androidboot.selinux=permissive
 BOARD_KERNEL_BASE := 0x80200000
 BOARD_KERNEL_PAGESIZE := 2048
 BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x02000000
@@ -95,15 +97,6 @@ TARGET_POWERHAL_VARIANT := qcom
 TARGET_RECOVERY_FSTAB := device/lge/awifi/rootdir/etc/fstab.awifi
 TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
 
-# SELinux policies
-include device/qcom/sepolicy/sepolicy.mk
-
-BOARD_SEPOLICY_DIRS += device/lge/awifi/sepolicy
-
-BOARD_SEPOLICY_UNION += \
-        device.te \
-        irrcServer.te
-
 # Time services
 BOARD_USES_QC_TIME_SERVICES := true
 
@@ -111,6 +104,15 @@ BOARD_USES_QC_TIME_SERVICES := true
 BOARD_VOLD_MAX_PARTITIONS := 40
 BOARD_VOLD_EMMC_SHARES_DEV_MAJOR := true
 BOARD_VOLD_DISC_HAS_MULTIPLE_MAJORS := true
+
+# Others
+BOARD_HAS_NO_SELECT_BUTTON := true
+TARGET_USES_LOGD := false
+BOARD_SUPPRESS_SECURE_ERASE := true
+
+# QC Optimizations
+TARGET_ENABLE_QC_AV_ENHANCEMENTS := true
+TARGET_USE_QCOM_BIONIC_OPTIMIZATION := true
 
 # Wifi
 BOARD_HAS_QCOM_WLAN := true
@@ -122,6 +124,14 @@ BOARD_HOSTAPD_DRIVER := NL80211
 BOARD_HOSTAPD_PRIVATE_LIB := lib_driver_cmd_$(BOARD_WLAN_DEVICE)
 WIFI_DRIVER_FW_PATH_STA := "sta"
 WIFI_DRIVER_FW_PATH_AP  := "ap"
+
+# GPS
+BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := $(TARGET_BOARD_PLATFORM)
+TARGET_NO_RPC := true
+
+# Camera
+BOARD_USES_CAMERA_FAST_AUTOFOCUS := true
+USE_DEVICE_SPECIFIC_CAMERA := true
 
 # inherit from the proprietary version
 -include vendor/lge/awifi/BoardConfigVendor.mk

@@ -25,15 +25,15 @@ PRODUCT_AAPT_CONFIG := normal
 PRODUCT_AAPT_PREF_CONFIG := xhdpi
 
 $(call inherit-product, frameworks/native/build/tablet-7in-xhdpi-2048-dalvik-heap.mk)
-$(call inherit-product, frameworks/native/build/phone-xxhdpi-2048-hwui-memory.mk)
 
 # Audio
 PRODUCT_PACKAGES += \
-    audio.primary.msm8960 \
-    audio.a2dp.default \
-    audio.usb.default \
-    audio.r_submix.default \
-    libaudio-resampler
+	audio_policy.msm8960 \
+	audio.primary.msm8960 \
+	audio.a2dp.default \
+	audio.usb.default \
+	audio.r_submix.default \
+	libaudio-resampler
     
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/audio_policy.conf:system/etc/audio_policy.conf \
@@ -191,4 +191,21 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_PROPERTY_OVERRIDES += \
     wifi.interface=wlan0 \
-    wifi.supplicant_scan_interval=15
+    wifi.supplicant_scan_interval=50
+
+# Others
+PRODUCT_PACKAGES += \
+	busybox
+	
+PRODUCT_PROPERTY_OVERRIDES += \
+	ro.sf.lcd_density=320
+
+PRODUCT_PROPERTY_OVERRIDES += \
+	ro.radio.noril=true \
+	ro.carrier=wifi-only
+
+PRODUCT_PROPERTY_OVERRIDES += \
+    view.scroll_friction=1 \
+    ro.min_pointer_dur=8 \
+    ro.min_fling_velocity=8000 \
+    ro.max_fling_velocity=16000

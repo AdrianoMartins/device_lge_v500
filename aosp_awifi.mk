@@ -23,7 +23,7 @@ $(call inherit-product-if-exists, vendor/lge/awifi/awifi-vendor.mk)
 
 # Device identifier. This must come after all inclusions.
 PRODUCT_DEVICE := awifi
-PRODUCT_NAME := full_awifi
+PRODUCT_NAME := aosp_awifi
 PRODUCT_BRAND := lge
 PRODUCT_MODEL := LG-V500
 PRODUCT_MANUFACTURER := LGE
