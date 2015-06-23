@@ -68,10 +68,6 @@ on boot
     # Set default LCD brightness
     write /sys/class/leds/lcd-backlight/brightness 102
 
-    # IRRC
-    chown media media /dev/msm_IRRC_pcm_dec
-    chmod 0660 /dev/msm_IRRC_pcm_dec
-
     # Create symlink for fb1 as HDMI
     symlink /dev/graphics/fb1 /dev/graphics/hdmi
 
@@ -358,12 +354,6 @@ service qseecomd /system/bin/qseecomd
 on property:ro.boot.baseband=apq
     setprop ro.radio.noril yes
     stop ril-daemon
-
-service irrcServer /system/bin/irrcServer
-    class main
-    user media
-    group media
-    onrestart restart irrcServer
 
 service time_daemon /system/bin/time_daemon
     class late_start

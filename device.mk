@@ -104,11 +104,6 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/touch_dev.idc:system/usr/idc/touch_dev.idc
 
-# IRRC
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.build.target_country=EU \
-    persist.sys.lge.eula_agreement=true
-
 # Keylayout
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/awifi-keypad-8064.kl:system/usr/keylayout/awifi-keypad-8064.kl
