@@ -15,4 +15,4 @@
 #
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/aosp_awifi.mk
+    $(LOCAL_DIR)/aosp_v500.mk

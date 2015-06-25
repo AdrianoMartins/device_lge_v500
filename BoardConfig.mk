@@ -22,7 +22,7 @@ TARGET_ARCH_VARIANT := armv7-a-neon
 TARGET_CPU_VARIANT := krait
 
 # Assert
-TARGET_OTA_ASSERT_DEVICE := awifi,v500
+TARGET_OTA_ASSERT_DEVICE := v500,awifi
 
 # Audio
 BOARD_USES_ALSA_AUDIO:= true
@@ -44,7 +44,7 @@ TARGET_NO_RADIOIMAGE := true
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_QCOM := true
 BLUETOOTH_HCI_USE_MCT := true
-BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/lge/awifi/bluetooth
+BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/lge/v500/bluetooth
 
 # Charger
 BOARD_CHARGER_ENABLE_SUSPEND := true
@@ -74,7 +74,7 @@ BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 user_debug=31 msm_rtb.filter=0
 BOARD_KERNEL_BASE := 0x80200000
 BOARD_KERNEL_PAGESIZE := 2048
 BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x02000000
-BOARD_CUSTOM_BOOTIMG_MK := device/lge/awifi/mkbootimg.mk
+BOARD_CUSTOM_BOOTIMG_MK := device/lge/v500/mkbootimg.mk
 BOARD_CUSTOM_BOOTIMG := true
 
 # Partitions
@@ -94,7 +94,7 @@ TARGET_BOARD_PLATFORM_GPU := qcom-adreno320
 TARGET_POWERHAL_VARIANT := qcom
 
 # Recovery
-TARGET_RECOVERY_FSTAB := device/lge/awifi/rootdir/etc/fstab.awifi
+TARGET_RECOVERY_FSTAB := device/lge/v500/rootdir/etc/fstab.awifi
 TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
 
 # Time services

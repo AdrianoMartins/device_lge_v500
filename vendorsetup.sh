@@ -14,4 +14,4 @@
 # limitations under the License.
 #
 
-add_lunch_combo aosp_awifi-userdebug
+add_lunch_combo aosp_v500-userdebug
