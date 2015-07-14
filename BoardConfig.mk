@@ -133,13 +133,12 @@ TARGET_NO_RPC := true
 BOARD_USES_CAMERA_FAST_AUTOFOCUS := true
 USE_DEVICE_SPECIFIC_CAMERA := true
 
-# Optimizations
+# Liquid Optimizations
 USE_O3 := true
 GRAPHITE := true
 LTO := true
 A15_QUAD := true
 STRICT := true
-ENABLE_PTHREAD := true
 
 # inherit from the proprietary version
 -include vendor/lge/awifi/BoardConfigVendor.mk
