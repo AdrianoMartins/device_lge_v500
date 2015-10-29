@@ -208,6 +208,11 @@ PRODUCT_PROPERTY_OVERRIDES += \
     wifi.interface=wlan0 \
     wifi.supplicant_scan_interval=50
 
+
+# Camera    
+PRODUCT_PACKAGES += \
+    liblocal
+    
 # Others
 PRODUCT_PACKAGES += \
 	busybox
