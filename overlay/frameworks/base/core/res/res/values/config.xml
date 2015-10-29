@@ -239,4 +239,7 @@
     <!-- Use Prebuild Google Webview Package -->
     <string name="config_webViewPackageName" translatable="false">com.google.android.webview</string>
 
+    <!-- Whether device supports double tap to wake -->
+    <bool name="config_supportDoubleTapWake">true</bool>
+
 </resources>
