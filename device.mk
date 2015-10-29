@@ -223,3 +223,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.min_pointer_dur=8 \
     ro.min_fling_velocity=8000 \
     ro.max_fling_velocity=16000
+    
+PRODUCT_PROPERTY_OVERRIDES += \
+    dalvik.vm.dex2oat-filter=speed \
+    dalvik.vm.dex2oat-swap=false
