@@ -111,7 +111,7 @@ BOARD_VOLD_DISC_HAS_MULTIPLE_MAJORS := true
 # Others
 BOARD_HAS_NO_SELECT_BUTTON := true
 BOARD_SUPPRESS_SECURE_ERASE := true
-TARGET_TAP_TO_WAKE_NODE := "/sys/devices/virtual/input/lge_touch/lpwg_notify"
+TARGET_TAP_TO_WAKE_NODE := "/sys/devices/virtual/input/lge_touch/knock_on"
 
 # QC Optimizations
 TARGET_ENABLE_QC_AV_ENHANCEMENTS := true

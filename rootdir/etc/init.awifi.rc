@@ -91,10 +91,6 @@ on boot
     # Tune buffersize for higher Miracast throughput
     setprop net.tcp.buffersize.wifi 524288,1048576,2560000,524288,1048576,2560000
     
-    # Enable knock-on
-    write /sys/devices/virtual/input/lge_touch/knock_on 1
-    write /sys/devices/i2c-3/3-004b/knock_on 1
-    
     # Set default vibration level
 	write /sys/class/timed_output/vibrator/amp 62
 
