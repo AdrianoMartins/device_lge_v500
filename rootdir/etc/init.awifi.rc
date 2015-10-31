@@ -20,8 +20,7 @@ on early-init
     mount debugfs debugfs /sys/kernel/debug
     chown system system /sys/kernel/debug/kgsl/proc
     write /sys/block/mmcblk0/queue/scheduler noop
-    write /sys/block/mmcblk0/bdi/read_ahead_kb 512
-
+    
 on init
     # Support legacy paths
     symlink /sdcard /mnt/sdcard
@@ -41,6 +40,11 @@ on early-boot
     setrlimit 8 67108864 67108864
 
 on boot
+
+    # Read ahead buffer
+    write /sys/block/mmcblk0/queue/read_ahead_kb 512
+    write /sys/block/mmcblk1/queue/read_ahead_kb 512
+
     # Set default LCD brightness
     write /sys/class/leds/lcd-backlight/brightness 102
 
