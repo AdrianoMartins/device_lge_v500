@@ -202,7 +202,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     wifi.interface=wlan0 \
     wifi.supplicant_scan_interval=50
 
-
 # Camera    
 PRODUCT_PACKAGES += \
     liblocal
@@ -227,3 +226,12 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.dex2oat-filter=speed \
     dalvik.vm.dex2oat-swap=false
+
+# AOSP Packages if GApps don't available
+ifeq ($(wildcard vendor/google/apps/vendor-google-apps.mk),)
+	PRODUCT_PACKAGES += \
+		Launcher3 \
+		LatinIME \
+		DeskClock \
+		Camera2
+endif
