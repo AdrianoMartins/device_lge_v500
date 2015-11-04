@@ -137,12 +137,13 @@ BOARD_VENDOR_QCOM_LOC_PDK_FEATURE_SET  := true
 BOARD_USES_CAMERA_FAST_AUTOFOCUS := true
 USE_DEVICE_SPECIFIC_CAMERA := true
 
-# Liquid Optimizations
+# Optimizations
 USE_O3 := true
-GRAPHITE := true
-LTO := true
-A15_QUAD := true
-STRICT := true
+KRAIT_TUNINGS := true
+CLANG_O3 := true
+GRAPHITE_OPTS := true
+ENABLE_GCCONLY := true
+STRICT_ALIASING := true
 
 # inherit from the proprietary version
 -include vendor/lge/awifi/BoardConfigVendor.mk
