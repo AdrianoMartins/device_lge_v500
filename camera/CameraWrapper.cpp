@@ -29,18 +29,17 @@
 #include <utils/threads.h>
 #include <utils/String8.h>
 #include <hardware/hardware.h>
-#include "hardware/camera.h"
+#include <hardware/camera.h>
 #include <camera/Camera.h>
 #include <camera/CameraParameters.h>
-
-#define UNUSED __attribute__((unused))
 
 static android::Mutex gCameraWrapperLock;
 static camera_module_t *gVendorModule = 0;
 
+static char **fixed_set_params = NULL;
+
 static int camera_device_open(const hw_module_t *module, const char *name,
         hw_device_t **device);
-static int camera_device_close(hw_device_t* device);
 static int camera_get_number_of_cameras(void);
 static int camera_get_camera_info(int camera_id, struct camera_info *info);
 
@@ -96,7 +95,7 @@ static int check_vendor_module()
     return rv;
 }
 
-static char *camera_fixup_getparams(UNUSED int id, const char *settings)
+static char *camera_fixup_getparams(int id, const char *settings)
 {
     android::CameraParameters params;
     params.unflatten(android::String8(settings));
@@ -117,7 +116,7 @@ static char *camera_fixup_getparams(UNUSED int id, const char *settings)
     return ret;
 }
 
-static char *camera_fixup_setparams(UNUSED int id, const char *settings)
+static char *camera_fixup_setparams(int id, const char *settings)
 {
     android::CameraParameters params;
     params.unflatten(android::String8(settings));
@@ -133,7 +132,10 @@ static char *camera_fixup_setparams(UNUSED int id, const char *settings)
 #endif
 
     android::String8 strParams = params.flatten();
-    char *ret = strdup(strParams.string());
+    if (fixed_set_params[id])
+        free(fixed_set_params[id]);
+    fixed_set_params[id] = strdup(strParams.string());
+    char *ret = fixed_set_params[id];
 
     return ret;
 }
@@ -272,10 +274,6 @@ static void camera_stop_recording(struct camera_device *device)
         return;
 
     VENDOR_CALL(device, stop_recording);
-
-    /* Restart preview after stop recording to flush buffers and not crash */
-    VENDOR_CALL(device, stop_preview);
-    VENDOR_CALL(device, start_preview);
 }
 
 static int camera_recording_enabled(struct camera_device *device)
@@ -357,10 +355,6 @@ static int camera_set_parameters(struct camera_device *device,
     char *tmp = NULL;
     tmp = camera_fixup_setparams(CAMERA_ID(device), params);
 
-#ifdef LOG_NDEBUG
-    __android_log_write(ANDROID_LOG_VERBOSE, LOG_TAG, tmp);
-#endif
-
     int ret = VENDOR_CALL(device, set_parameters, tmp);
     return ret;
 }
@@ -375,17 +369,9 @@ static char *camera_get_parameters(struct camera_device *device)
 
     char *params = VENDOR_CALL(device, get_parameters);
 
-#ifdef LOG_NDEBUG
-    __android_log_write(ANDROID_LOG_VERBOSE, LOG_TAG, params);
-#endif
-
     char *tmp = camera_fixup_getparams(CAMERA_ID(device), params);
     VENDOR_CALL(device, put_parameters, params);
     params = tmp;
-
-#ifdef LOG_NDEBUG
-    __android_log_write(ANDROID_LOG_VERBOSE, LOG_TAG, params);
-#endif
 
     return params;
 }
@@ -449,6 +435,11 @@ static int camera_device_close(hw_device_t *device)
         goto done;
     }
 
+    for (int i = 0; i < camera_get_number_of_cameras(); i++) {
+        if (fixed_set_params[i])
+            free(fixed_set_params[i]);
+    }
+
     wrapper_dev = (wrapper_camera_device_t*) device;
 
     wrapper_dev->vendor->common.close((hw_device_t*)wrapper_dev->vendor);
@@ -492,6 +483,14 @@ static int camera_device_open(const hw_module_t *module, const char *name,
         cameraid = atoi(name);
         num_cameras = gVendorModule->get_number_of_cameras();
 
+        fixed_set_params = (char **) malloc(sizeof(char *) * num_cameras);
+        if (!fixed_set_params) {
+            ALOGE("parameter memory allocation fail");
+            rv = -ENOMEM;
+            goto fail;
+        }
+        memset(fixed_set_params, 0, sizeof(char *) * num_cameras);
+
         if (cameraid > num_cameras) {
             ALOGE("camera service provided cameraid out of bounds, "
                     "cameraid = %d, num supported = %d",
@@ -529,7 +528,7 @@ static int camera_device_open(const hw_module_t *module, const char *name,
         memset(camera_ops, 0, sizeof(*camera_ops));
 
         camera_device->base.common.tag = HARDWARE_DEVICE_TAG;
-        camera_device->base.common.version = CAMERA_DEVICE_API_VERSION_1_0;
+        camera_device->base.common.version = HARDWARE_DEVICE_API_VERSION(1, 0);
         camera_device->base.common.module = (hw_module_t *)(module);
         camera_device->base.common.close = camera_device_close;
         camera_device->base.ops = camera_ops;
