@@ -21,9 +21,6 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base.mk)
 $(call inherit-product, device/lge/v500/device.mk)
 $(call inherit-product-if-exists, vendor/lge/awifi/awifi-vendor.mk)
 
-# Google Apps
-$(call inherit-product-if-exists, vendor/google/apps/vendor-google-apps.mk)
-
 # Device identifier. This must come after all inclusions.
 PRODUCT_DEVICE := v500
 PRODUCT_NAME := aosp_v500

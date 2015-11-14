@@ -231,8 +231,21 @@ PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.dex2oat-filter=speed \
     dalvik.vm.dex2oat-swap=false
 
+# Google Apps
+GAPPS_VARIANT := micro
+
+PRODUCT_PACKAGES += Chrome \
+                    Music2 \
+                    PrebuiltNewsWeather \
+                    GoogleCamera \
+                    LatinImeGoogle \
+                    PrebuiltDeskClockGoogle \
+                    YouTube
+                    
+$(call inherit-product, vendor/google/build/opengapps-packages.mk)
+
 # AOSP Packages if GApps don't available
-ifeq ($(wildcard vendor/google/apps/vendor-google-apps.mk),)
+ifeq ($(wildcard vendor/google/build/opengapps-packages.mk),)
 	PRODUCT_PACKAGES += \
 		Launcher3 \
 		LatinIME \
