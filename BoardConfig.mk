@@ -146,5 +146,11 @@ GRAPHITE_OPTS := true
 ENABLE_GCCONLY := true
 STRICT_ALIASING := true
 
+# Enable dex-preoptimization to speed up the first boot sequence
+# of an SDK AVD. Note that this operation only works on Linux for now
+ifeq ($(HOST_OS),linux)
+    WITH_DEXPREOPT := true
+endif
+
 # inherit from the proprietary version
 -include vendor/lge/awifi/BoardConfigVendor.mk
