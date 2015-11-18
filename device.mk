@@ -252,5 +252,7 @@ ifeq ($(wildcard vendor/google/build/opengapps-packages.mk),)
 		Launcher3 \
 		LatinIME \
 		DeskClock \
-		Camera2
+		Camera2 \
+		OneTimeInitializer \
+		Provision
 endif
