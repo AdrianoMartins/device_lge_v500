@@ -16,3 +16,13 @@ LOCAL_MODULE_TAGS := optional
 
 include $(BUILD_SHARED_LIBRARY)
 #include $(BUILD_HEAPTRACKED_SHARED_LIBRARY)
+
+# Shim required for camera hal
+include $(CLEAR_VARS)
+LOCAL_SRC_FILES := \
+    libcamera_shim.c
+
+LOCAL_SHARED_LIBRARIES := libutils libgui
+LOCAL_MODULE := libcamera_shim
+LOCAL_MODULE_TAGS := optional
+include $(BUILD_SHARED_LIBRARY)

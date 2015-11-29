@@ -38,7 +38,7 @@
      * NOTES:    In L, the sensor manager exposed this lock that callers
      *           actually locked & unlocked when accessing it. In M this
      *           is no longer the case, but we still must provide it for
-     *           the camera library to be happy. It will lock nothnhing, but
+     *           the camera library to be happy. It will lock nothing, but
      *           as long as it is a real lock and pthread_mutex_* funcs
      *           work on it, the camera library will be happy.
      */
@@ -76,7 +76,7 @@
  *           in a package name as a "string16" to the consrtuctor. Since this
  *           lib only services camera library, it is easy for us to just do that
  *           and this provide the constructor that the camera library wants.
- *           The package name we use if "camera.msm8226". Why not?
+ *           The package name we use if "camera.msm8960". Why not?
  */
 void _ZN7android13SensorManagerC1Ev(void *sensorMgr)
 {
@@ -91,7 +91,7 @@ void _ZN7android13SensorManagerC1Ev(void *sensorMgr)
  * FUNCTION: android::SensorManager::createEventQueue(void)
  * USE:      INTERPOSE: create an event queue to receive events
  * NOTES:    This function no longer exists in M, instead now one must pass
- *           in a client name as a "string8" and an integer "mode"to it. M
+ *           in a client name as a "string8" and an integer "mode" to it. M
  *           sources list default values for these params as an empty string
  *           and 0. So we'll craft the same call here.
  */

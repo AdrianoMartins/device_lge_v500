@@ -53,7 +53,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # Camera
 PRODUCT_PACKAGES += \
-    camera.msm8960
+    camera.msm8960 \
+    libcamera_shim
 
 # Charger
 PRODUCT_PACKAGES += \
@@ -210,10 +211,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     wifi.interface=wlan0 \
     wifi.supplicant_scan_interval=50
 
-# Camera    
-PRODUCT_PACKAGES += \
-    liblocal
-    
 # Others
 PRODUCT_PACKAGES += \
 	busybox

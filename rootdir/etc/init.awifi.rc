@@ -175,7 +175,7 @@ on post-fs-data
     restorecon /sys/class/timed_output/vibrator/amp
     
     # Symbols required for blobs
-    export LD_PRELOAD "/system/lib/liblocal.so"
+	export LD_SHIM_LIBS "/system/lib/hw/camera.vendor.msm8960.so|libcamera_shim.so"    
 
 on charger
     # Enable Power modes and set the CPU Freq Sampling rates
