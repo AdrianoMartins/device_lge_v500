@@ -90,7 +90,6 @@ PRODUCT_PACKAGES += \
     memtrack.msm8960
 
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.opengles.version=196608 \
     ro.sf.lcd_density=320 \
     persist.hwc.mdpcomp.enable=true \
     debug.egl.recordable.rgba8888=1
