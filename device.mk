@@ -140,15 +140,16 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PACKAGES += \
     libc2dcolorconvert \
     libdivxdrmdecrypt \
-    libstagefrighthw \
-    libOmxCore \
-    libmm-omxcore \
-    libOmxVdec \
-    libOmxVdecHevc \
-    libOmxVenc \
     libextmedia_jni \
+    libOmxAacEnc \
+    libOmxAmrEnc \
+    libOmxCore \
+    libOmxEvrcEnc \
+    libOmxQcelp13Enc \
+    libOmxVdec \
+    libOmxVenc \
     libOmxVidcCommon \
-    libqcmediaplayer
+    libstagefrighthw
     
 # Power HAL
 PRODUCT_PACKAGES += \
