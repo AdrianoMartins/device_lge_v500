@@ -54,7 +54,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Camera
 PRODUCT_PACKAGES += \
     camera.msm8960 \
-    libcamera_shim
+    libcamera_shim \
+	Camera2
 
 # Charger
 PRODUCT_PACKAGES += \
@@ -253,7 +254,6 @@ ifeq ($(wildcard vendor/google/build/opengapps-packages.mk),)
 		Launcher3 \
 		LatinIME \
 		DeskClock \
-		Camera2 \
 		OneTimeInitializer \
 		Provision
 endif
