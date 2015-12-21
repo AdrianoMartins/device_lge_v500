@@ -246,7 +246,7 @@ PRODUCT_PACKAGES += Chrome \
                     PrebuiltDeskClockGoogle \
                     YouTube
                     
-$(call inherit-product, vendor/google/build/opengapps-packages.mk)
+$(call inherit-product-if-exists, vendor/google/build/opengapps-packages.mk)
 
 # AOSP Packages if GApps don't available
 ifeq ($(wildcard vendor/google/build/opengapps-packages.mk),)
