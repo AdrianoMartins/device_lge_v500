@@ -242,7 +242,6 @@ GAPPS_VARIANT := micro
 PRODUCT_PACKAGES += Chrome \
                     Music2 \
                     PrebuiltNewsWeather \
-                    GoogleCamera \
                     LatinImeGoogle \
                     PrebuiltDeskClockGoogle \
                     YouTube
