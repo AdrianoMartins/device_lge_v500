@@ -81,7 +81,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # Filesystem
 PRODUCT_PACKAGES += \
-    setup_fs
+    setup_fs \
+    mkfs.ntfs \
+    mount.ntfs \
+    fsck.ntfs
 
 # GPS
 PRODUCT_COPY_FILES += \
