@@ -150,6 +150,9 @@ GRAPHITE_OPTS := true
 ENABLE_GCCONLY := true
 STRICT_ALIASING := true
 
+TARGET_KERNEL_CUSTOM_TOOLCHAIN := arm-eabi-4.9-cortex-a15
+TARGET_GCC_VERSION_EXP := 5.x-cortex-a15
+
 # Enable dex-preoptimization to speed up the first boot sequence
 # of an SDK AVD. Note that this operation only works on Linux for now
 ifeq ($(HOST_OS),linux)
