@@ -248,7 +248,8 @@ PRODUCT_PACKAGES += Chrome \
                     PrebuiltNewsWeather \
                     LatinImeGoogle \
                     PrebuiltDeskClockGoogle \
-                    YouTube
+                    YouTube \
+                    HotwordEnrollment
                     
 $(call inherit-product-if-exists, vendor/google/build/opengapps-packages.mk)
 
