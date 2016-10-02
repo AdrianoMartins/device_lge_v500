@@ -177,7 +177,11 @@ PRODUCT_PACKAGES += \
 # Sensors
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.qc.sensors.wl_dis=true \
-    ro.qc.sdk.sensors.gestures=true
+    ro.qualcomm.sensors.smd=true
+
+# Storage
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.sys.sdcardfs=true
 
 # Thermal
 PRODUCT_COPY_FILES += \
@@ -198,7 +202,6 @@ PRODUCT_PACKAGES += \
     conn_init \
     libwpa_client \
     hostapd \
-    dhcpcd.conf \
     wpa_supplicant \
     wpa_supplicant.conf
 

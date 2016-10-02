@@ -22,8 +22,6 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := libwfcu
 LOCAL_SRC_FILES := wfc_util_fctrl.c \
                    wfc_util_common.c
-LOCAL_CFLAGS := -Wall \
-                -Werror
 LOCAL_CFLAGS += -DCONFIG_LGE_WLAN_WIFI_PATCH
 ifeq ($(BOARD_HAS_QCOM_WLAN), true)
 LOCAL_SRC_FILES += wfc_util_qcom.c
@@ -39,7 +37,6 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := conn_init.c
 LOCAL_SHARED_LIBRARIES := libcutils liblog
 LOCAL_SHARED_LIBRARIES += libwfcu
-LOCAL_CFLAGS += -Wall -Werror
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE_PATH := $(TARGET_OUT)/bin
 LOCAL_MODULE := conn_init
