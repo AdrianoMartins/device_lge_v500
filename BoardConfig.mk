@@ -154,6 +154,14 @@ CLANG_O3 := true
 TARGET_KERNEL_CUSTOM_TOOLCHAIN := arm-eabi-4.9-cortex-a15
 TARGET_GCC_VERSION_EXP := 4.9-cortex-a15
 
+# Snapdragon LLVM Compiler
+ifneq ($(HOST_OS),darwin)
+SDCLANG := true
+SDCLANG_COMMON_FLAGS := -O3
+SDCLANG_PATH := prebuilts/clang/linux-x86/host/sdclang-3.8/bin
+SDCLANG_LTO_DEFS := device/lge/v500/sdclang/sdllvm-lto-defs.mk
+endif
+
 # Enable dex-preoptimization to speed up the first boot sequence
 # of an SDK AVD. Note that this operation only works on Linux for now
 ifeq ($(HOST_OS),linux)
