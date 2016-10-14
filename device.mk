@@ -78,6 +78,11 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # DRM
 PRODUCT_PROPERTY_OVERRIDES += \
     drm.service.enabled=true
+    
+# DRM properties
+PRODUCT_PROPERTY_OVERRIDES += \
+	media.stagefright.legacyencoder=true \
+	media.stagefright.less-secure=true
 
 # Filesystem
 PRODUCT_PACKAGES += \
