@@ -252,14 +252,10 @@
         <ctl name="RX5 MIX1 INP2" value="RX7" />
         <ctl name="RX4 DSM MUX" value="DSM_INV" />
         <ctl name="RX6 DSM MUX" value="DSM_INV" />
-        <ctl name="RX3 Digital Volume" value="60" />
-        <ctl name="RX5 Digital Volume" value="60" />
-        <ctl name="LINEOUT1 Volume" value="11" />
-        <ctl name="LINEOUT2 Volume" value="11" />
-        <ctl name="LINEOUT3 Volume" value="11" />
-        <ctl name="LINEOUT4 Volume" value="11" />
+        <ctl name="RX3 Digital Volume" value="61" />
+        <ctl name="RX5 Digital Volume" value="61" />
     </path>
-    
+
     <path name="speaker-reverse">
         <path name="speaker" />
         <ctl name="RX3 MIX1 INP1" value="RX2" />

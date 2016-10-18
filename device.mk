@@ -38,12 +38,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/audio_policy.conf:system/etc/audio_policy.conf \
     $(LOCAL_PATH)/configs/mixer_paths.xml:system/etc/mixer_paths.xml
 
-PRODUCT_PROPERTY_OVERRIDES += \
-    persist.audio.handset.mic.type=digital \
-    persist.audio.dualmic.config=false \
-    persist.audio.fluence.voicecall=true \
-    persist.audio.lowlatency.rec=false
-
 # Bluetooth
 PRODUCT_PACKAGES += \
     init.awifi.bt.sh
