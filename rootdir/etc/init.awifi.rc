@@ -267,6 +267,10 @@ service qcamerasvr /system/bin/mm-qcamera-daemon
     class late_start
     user camera
     group camera system inet input
+    
+# Restart cameraserver in case it starts before qcamerasvr
+on property:init.svc.qcamerasvr=running
+    restart cameraserver    
 
 service conn_init /system/bin/conn_init
     class late_start
