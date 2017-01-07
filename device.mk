@@ -83,7 +83,10 @@ PRODUCT_PACKAGES += \
     setup_fs \
     mkfs.ntfs \
     mount.ntfs \
-    fsck.ntfs
+    fsck.ntfs \
+    mount.exfat \
+    fsck.exfat \
+    mkfs.exfat
 
 # GPS
 PRODUCT_COPY_FILES += \
