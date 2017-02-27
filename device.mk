@@ -244,6 +244,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.dex2oat-swap=false \
     dalvik.vm.image-dex2oat-filter=speed
 
+# Bring in google assistant
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.opa.eligible_device=true
+ 
 # Google Apps
 PRODUCT_PACKAGES += \
 	WebViewGoogle
