@@ -247,15 +247,3 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Bring in google assistant
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.opa.eligible_device=true
- 
-# Google Apps
-PRODUCT_PACKAGES += \
-	WebViewGoogle
-
-# AOSP Packages
-PRODUCT_PACKAGES += \
-	Launcher3 \
-	LatinIME \
-	DeskClock \
-	OneTimeInitializer \
-	Provision
