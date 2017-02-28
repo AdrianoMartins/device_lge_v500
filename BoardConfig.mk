@@ -149,6 +149,8 @@ BOARD_VENDOR_QCOM_LOC_PDK_FEATURE_SET  := true
 # Optimizations
 USE_O3 := true
 CLANG_O3 := true
+GRAPHITE_OPTS := true
+STRICT_ALIASING := true
 
 # GCC
 TARGET_KERNEL_CUSTOM_TOOLCHAIN := arm-eabi-4.9-cortex-a15
