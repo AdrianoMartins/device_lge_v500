@@ -163,7 +163,7 @@ SDCLANG := true
 SDCLANG_FORCED := false
 
 # Path to Snapdragon LLVM
-SDCLANG_PATH := vendor/qcom/sdclang-3.8/bin
+SDCLANG_PATH := prebuilts/clang/host/linux-x86/3.8/bin
 
 # Snapdragon LLVM Build Flags
 SDCLANG_LTO_DEFS := device/lge/v500/sdllvm-lto-defs.mk
