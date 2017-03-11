@@ -47,6 +47,7 @@ BOARD_GLOBAL_CFLAGS += -DCAMERA_VENDOR_L_COMPAT
 USE_DEVICE_SPECIFIC_CAMERA := true
 TARGET_HAS_LEGACY_CAMERA_HAL1 := true
 TARGET_USES_MEDIA_EXTENSIONS := true
+USE_CAMERA_STUB := false
 
 # Charger
 BOARD_CHARGER_ENABLE_SUSPEND := true
@@ -157,19 +158,19 @@ STRICT_ALIASING := true
 TARGET_KERNEL_CUSTOM_TOOLCHAIN := arm-eabi-4.9-cortex-a15
 TARGET_GCC_VERSION_EXP := 4.9-cortex-a15
 
-# Snapdragon LLVM Compiler
-ifneq ($(HOST_OS),darwin)
+# Enable Snapdragon LLVM 
 SDCLANG := true
+SDCLANG_FORCED := false
+
+# Path to Snapdragon LLVM
+SDCLANG_PATH := vendor/qcom/sdclang-3.8/bin
+
+# Snapdragon LLVM Build Flags
+SDCLANG_LTO_DEFS := device/lge/v500/sdllvm-lto-defs.mk
 SDCLANG_COMMON_FLAGS := -O3
-SDCLANG_PATH := prebuilts/clang/linux-x86/host/sdclang-3.8/bin
-SDCLANG_LTO_DEFS := device/lge/v500/sdclang/sdllvm-lto-defs.mk
-endif
 
 # Enable dex-preoptimization to speed up the first boot sequence
 # of an SDK AVD. Note that this operation only works on Linux for now
 ifeq ($(HOST_OS),linux)
     WITH_DEXPREOPT := true
 endif
-
-# inherit from the proprietary version
--include vendor/lge/awifi/BoardConfigVendor.mk
