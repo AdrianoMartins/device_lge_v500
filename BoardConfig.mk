@@ -167,7 +167,7 @@ SDCLANG_PATH := vendor/qcom/sdclang-3.8/bin
 
 # Snapdragon LLVM Build Flags
 SDCLANG_LTO_DEFS := device/lge/v500/sdllvm-lto-defs.mk
-SDCLANG_COMMON_FLAGS := -O3
+SDCLANG_COMMON_FLAGS := -O3 -march=armv7-a -mcpu=cortex-a15 -mfloat-abi=softfp -mfpu=neon-vfpv4
 
 # Enable dex-preoptimization to speed up the first boot sequence
 # of an SDK AVD. Note that this operation only works on Linux for now
