@@ -214,7 +214,16 @@
     <bool name="config_supportDoubleTapWake">true</bool>
 
     <!-- enable doze powersaving mode -->
-    <bool name="config_enableAutoPowerModes">false</bool>
+    <bool name="config_enableAutoPowerModes">true</bool>
+
+    <!-- Enable doze mode
+         ComponentName of a dream to show whenever the system would otherwise have gone to sleep. -->
+    <string name="config_dozeComponent">com.android.systemui/com.android.systemui.doze.DozeService</string>
+    <!-- If true, the doze component is not started until after the screen has been turned off
+         and the screen off animation has been performed. -->
+    <bool name="config_dozeAfterScreenOff">true</bool>
+    <!-- Specifies whether to decouple the interactive state of the device from the display on/off state. -->
+    <bool name="config_powerDecoupleInteractiveModeFromDisplay">true</bool>
 
     <!-- Allow the gesture to double tap the power button twice to start the camera while the device
      is non-interactive. -->
