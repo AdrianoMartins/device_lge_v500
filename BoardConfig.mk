@@ -62,7 +62,7 @@ TARGET_GLOBAL_CPPFLAGS += -mtune=cortex-a15 -mfpu=neon-vfpv4 -mfloat-abi=softfp 
 
 # Sensors
 BOARD_GLOBAL_CFLAGS += -DCOMPAT_SENSORS_M
-TARGET_NEEDS_GCC_LIBC := true
+TARGET_NEEDS_GCC_LIBC := false
 TARGET_NO_SENSOR_PERMISSION_CHECK := true
 
 # Fonts
