@@ -189,7 +189,7 @@
 
     <string-array name="config_globalActionsList">
         <item>power</item>
-        <item>reboot</item>
+        <item>restart</item>
         <item>bugreport</item>
         <item>users</item>
         <item>airplane</item>
