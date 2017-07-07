@@ -223,6 +223,12 @@ PRODUCT_PROPERTY_OVERRIDES += \
     wifi.interface=wlan0 \
     ro.wifi.channels=14
 
+# Stagefright FFMPEG plugin
+PRODUCT_PACKAGES += \
+    libffmpeg_extractor \
+    libffmpeg_omx \
+    media_codecs_ffmpeg.xml
+
 # Others
 PRODUCT_PACKAGES += \
 	busybox
@@ -246,6 +252,11 @@ PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.dex2oat-swap=false \
     dalvik.vm.image-dex2oat-filter=speed
 
+# Stagefright FFMPEG plugin
+PRODUCT_PROPERTY_OVERRIDES += \
+    media.sf.omx-plugin=libffmpeg_omx.so \
+    media.sf.extractor-plugin=libffmpeg_extractor.so
+    
 # Bring in google assistant
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.opa.eligible_device=true
