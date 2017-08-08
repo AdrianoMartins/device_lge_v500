@@ -240,7 +240,4 @@
         <item>com.google.android.gms/com.google.android.gms.update.SystemUpdateService$SecretCodeReceiver</item>
     </string-array>
 
-    <!-- Enable freeform window management and PiP -->
-    <bool name="config_freeformWindowManagement">true</bool>
-
 </resources>
