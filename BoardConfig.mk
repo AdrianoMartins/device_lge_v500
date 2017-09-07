@@ -57,8 +57,8 @@ BOARD_CHARGING_CMDLINE_NAME := "androidboot.mode"
 BOARD_CHARGING_CMDLINE_VALUE := "chargerlogo"
 
 # Flags
-TARGET_GLOBAL_CFLAGS += -mtune=cortex-a15 -mfpu=neon-vfpv4 -mfloat-abi=softfp -ffast-math
-TARGET_GLOBAL_CPPFLAGS += -mtune=cortex-a15 -mfpu=neon-vfpv4 -mfloat-abi=softfp -ffast-math
+#TARGET_GLOBAL_CFLAGS += -mtune=cortex-a15 -mfpu=neon-vfpv4 -mfloat-abi=softfp -ffast-math
+#TARGET_GLOBAL_CPPFLAGS += -mtune=cortex-a15 -mfpu=neon-vfpv4 -mfloat-abi=softfp -ffast-math
 
 # Sensors
 BOARD_GLOBAL_CFLAGS += -DCOMPAT_SENSORS_M
@@ -163,11 +163,11 @@ SDCLANG := true
 SDCLANG_FORCED := false
 
 # Path to Snapdragon LLVM
-SDCLANG_PATH := prebuilts/clang/host/linux-x86/3.8/bin
+#SDCLANG_PATH := prebuilts/clang/host/linux-x86/3.8/bin
 
 # Snapdragon LLVM Build Flags
-SDCLANG_LTO_DEFS := device/lge/v500/sdllvm-lto-defs.mk
-SDCLANG_COMMON_FLAGS := -O3 -march=armv7-a -mcpu=cortex-a15 -mfloat-abi=softfp -mfpu=neon-vfpv4
+#SDCLANG_LTO_DEFS := device/lge/v500/sdllvm-lto-defs.mk
+#SDCLANG_COMMON_FLAGS := -O3 -march=armv7-a -mcpu=cortex-a15 -mfloat-abi=softfp -mfpu=neon-vfpv4
 
 # Enable dex-preoptimization to speed up the first boot sequence
 # of an SDK AVD. Note that this operation only works on Linux for now
