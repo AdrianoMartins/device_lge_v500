@@ -5,6 +5,7 @@
 #include <utils/Log.h>
 #include <hardware/power.h>
 #include <hardware/hardware.h>
+#include <sensor/SensorManager.h>
 
 //various funcs we'll need to call, in their mangled form
 
