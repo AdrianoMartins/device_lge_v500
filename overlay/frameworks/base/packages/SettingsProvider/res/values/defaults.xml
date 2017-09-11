@@ -19,6 +19,10 @@
 
 <resources>
  
+    <!-- Enable Wi-Fi by default on first boot -->
+    <bool name="def_wifi_on">true</bool>
+
+    <!-- Google Backup -->
     <string name="def_backup_transport">com.google.android.backup/.BackupTransportService</string>
     
 </resources>
