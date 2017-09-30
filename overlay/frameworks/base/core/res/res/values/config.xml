@@ -187,13 +187,12 @@
     <bool name="config_enableGeocoderOverlay">true</bool>
     <bool name="config_enableGeofenceOverlay">true</bool>
 
-    <string-array name="config_globalActionsList">
+    <!-- Defines the default set of global actions. Actions may still be disabled or hidden based
+     on the current state of the device. -->
+    <string-array translatable="false" name="config_globalActionsList">
         <item>power</item>
         <item>restart</item>
-        <item>bugreport</item>
-        <item>users</item>
         <item>airplane</item>
-        <item>silent</item>
     </string-array>
 
     <!-- Whether WiFi display is supported by this device.
