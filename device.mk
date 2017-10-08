@@ -33,7 +33,7 @@ PRODUCT_PACKAGES += \
     audio.usb.default \
     audio.r_submix.default \
     libaudio-resampler
-    
+
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/audio_policy.conf:system/etc/audio_policy.conf \
     $(LOCAL_PATH)/configs/mixer_paths.xml:system/etc/mixer_paths.xml
@@ -49,7 +49,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PACKAGES += \
     camera.msm8960 \
     libcamera_shim \
-	Camera2
+    Camera2
 
 # Charger
 PRODUCT_PACKAGES += \
@@ -72,7 +72,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # DRM
 PRODUCT_PROPERTY_OVERRIDES += \
     drm.service.enabled=true
-    
+
 # DRM properties
 PRODUCT_PROPERTY_OVERRIDES += \
 	media.stagefright.legacyencoder=true \
@@ -146,7 +146,7 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_PROPERTY_OVERRIDES += \
     media.aac_51_output_enabled=true
-    
+
 # OMX
 PRODUCT_PACKAGES += \
     libc2dcolorconvert \
@@ -161,7 +161,7 @@ PRODUCT_PACKAGES += \
     libOmxVenc \
     libOmxVidcCommon \
     libstagefrighthw
-    
+
 # Power HAL
 PRODUCT_PACKAGES += \
     power.msm8960
@@ -224,7 +224,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Others
 PRODUCT_PACKAGES += \
 	busybox
-	
+
 PRODUCT_PROPERTY_OVERRIDES += \
 	ro.sf.lcd_density=320
 
@@ -238,9 +238,9 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.min_fling_velocity=8000 \
     ro.max_fling_velocity=16000
 
-PRODUCT_PROPERTY_OVERRIDES += \    
+PRODUCT_PROPERTY_OVERRIDES += \
     ro.product.first_api_level=24
-    
+
 PRODUCT_PACKAGES += \
     android.hardware.audio@2.0-impl \
     android.hardware.audio.effect@2.0-impl \
@@ -256,16 +256,16 @@ PRODUCT_PACKAGES += \
     android.hardware.renderscript@1.0-impl \
     android.hardware.sensors@1.0-impl \
     android.hardware.vibrator@1.0-impl \
-    android.hardware.wifi@1.0-service    
-    
+    android.hardware.wifi@1.0-service
+
 # USB HAL
 PRODUCT_PACKAGES += \
     android.hardware.usb@1.0-service
-    
+
 # BT HAL
 PRODUCT_PACKAGES += \
-    libbt-vendor        
-    
+    libbt-vendor
+
 # ART
 PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.dex2oat-filter=speed \
@@ -275,3 +275,4 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Bring in google assistant
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.opa.eligible_device=true
+
